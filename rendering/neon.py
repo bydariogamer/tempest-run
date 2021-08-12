@@ -65,9 +65,11 @@ class NeonRenderer:
 
     def draw_lines(self, surface: pygame.Surface, lines: Iterable[NeonLine], extra_darkness_factor=1):
         """Draws lines with a fancy neon effect.
+
         :param surface: the surface to draw them onto
         :param lines: the lines to draw
-        :param extra_darkness_factor: a value from 0 to 1 that will control the 'extra darkness' of the lines (0 being completely dark).
+        :param extra_darkness_factor: a value from 0 to 1 that will control the 'extra darkness' of the lines (0 being
+        completely dark).
         """
         if not config.Debug.use_neon:
             for line in lines:
