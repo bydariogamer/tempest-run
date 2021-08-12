@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 import keybinds
 import rendering.neon as neon
@@ -202,6 +203,7 @@ def create_or_recreate_window():
 
 def _main():
     config.load_configs_from_disk()
+    config.Debug.fps_test = True if "--test" in sys.argv else False
 
     # create config.json on game start if it's been deleted
     if not config.get_config_path().exists():
