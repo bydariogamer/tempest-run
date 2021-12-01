@@ -7,7 +7,7 @@ title = Tempest Run
 package.name = tempest
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.summer_jam
+package.domain = org.summerjam
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy,android,pygame
+requirements = kivy,android,pygame,opencv,numpy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
