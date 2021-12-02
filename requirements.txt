@@ -1,3 +1,4 @@
 pygame>=2.0.1
 opencv-python>=4.5.3.56
 numpy>=1.16.4
+pathlib
