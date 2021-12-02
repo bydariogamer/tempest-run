@@ -14,7 +14,6 @@ def get_instance():
 
 
 class Profiler:
-
     def __init__(self):
         self.is_running = False
         self.pr = cProfile.Profile(builtins=False)
@@ -25,7 +24,7 @@ class Profiler:
         if not self.is_running:
             self.pr.disable()
 
-            sortby = 'cumulative'
+            sortby = "cumulative"
             ps = pstats.Stats(self.pr)
             ps.strip_dirs()
             ps.sort_stats(sortby)

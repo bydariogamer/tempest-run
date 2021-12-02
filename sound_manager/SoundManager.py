@@ -20,14 +20,14 @@ class SoundManager:
     """
 
     SOUND_PATHS = {
-        'death': os.path.abspath('assets/sounds/death'),
-        'jump': os.path.abspath('assets/sounds/jump'),
-        'kill': os.path.abspath('assets/sounds/kill'),
-        'accept': os.path.abspath('assets/sounds/accept'),
-        'blip': os.path.abspath('assets/sounds/blip'),
-        'blip2': os.path.abspath('assets/sounds/blip2'),
+        "death": os.path.abspath("assets/sounds/death"),
+        "jump": os.path.abspath("assets/sounds/jump"),
+        "kill": os.path.abspath("assets/sounds/kill"),
+        "accept": os.path.abspath("assets/sounds/accept"),
+        "blip": os.path.abspath("assets/sounds/blip"),
+        "blip2": os.path.abspath("assets/sounds/blip2"),
     }
-    PRIORITIES = ['accept', 'death', 'jump', 'kill', 'blip2', 'blip']
+    PRIORITIES = ["accept", "death", "jump", "kill", "blip2", "blip"]
 
     LOADED_SOUNDS = {}
 
@@ -61,7 +61,9 @@ class SoundManager:
                 for filename in os.listdir(path_to_sounds):
                     if filename.endswith(".wav") or filename.endswith(".ogg"):
                         full_path = utils.resource_path(path_to_sounds + "/" + filename)
-                        cls.LOADED_SOUNDS[sound_id].append(pygame.mixer.Sound(full_path))
+                        cls.LOADED_SOUNDS[sound_id].append(
+                            pygame.mixer.Sound(full_path)
+                        )
                         cnt += 1
             except Exception:
                 print("INFO: error while loading sound effects: {}".format(sound_id))
@@ -78,7 +80,11 @@ class SoundManager:
         if volume <= 0:
             return False
 
-        if sound_id is None or sound_id not in cls.LOADED_SOUNDS or len(cls.LOADED_SOUNDS[sound_id]) == 0:
+        if (
+            sound_id is None
+            or sound_id not in cls.LOADED_SOUNDS
+            or len(cls.LOADED_SOUNDS[sound_id]) == 0
+        ):
             return False
 
         if cls.CHANNEL.get_busy():
@@ -136,7 +142,10 @@ class SoundManager:
                     # We're playing a song already, but it's not the right one. Time to fade.
                     cls.IS_FADING = True
                     cls.NEXT_SONG_AFTER_FADEOUT = song_id
-                    x = threading.Thread(target=SoundManager._do_async_fadeout, args=(fadeout_ms, fadein_ms))
+                    x = threading.Thread(
+                        target=SoundManager._do_async_fadeout,
+                        args=(fadeout_ms, fadein_ms),
+                    )
                     x.start()
         finally:
             cls.FADEOUT_LOCK.release()
@@ -159,7 +168,9 @@ class SoundManager:
                 pygame.mixer.music.stop()
                 cls.CURRENT_SONG_ID = None
             else:
-                cls._play_song_immediately(cls.NEXT_SONG_AFTER_FADEOUT, fadein_ms=fadein_ms)
+                cls._play_song_immediately(
+                    cls.NEXT_SONG_AFTER_FADEOUT, fadein_ms=fadein_ms
+                )
                 cls.NEXT_SONG_AFTER_FADEOUT = None
         finally:
             cls.FADEOUT_LOCK.release()

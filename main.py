@@ -19,7 +19,6 @@ TARGET_FPS = config.Display.fps if not config.Debug.fps_test else -1
 
 
 class GameLoop:
-
     def __init__(self):
         self.running = True
         self.clock = pygame.time.Clock()
@@ -50,7 +49,9 @@ class GameLoop:
                 if e.type == pygame.KEYDOWN:
                     if e.key in keybinds.TOGGLE_NEON:
                         config.Debug.use_neon = not config.Debug.use_neon
-                        print("INFO: toggling neon to: {}".format(config.Debug.use_neon))
+                        print(
+                            "INFO: toggling neon to: {}".format(config.Debug.use_neon)
+                        )
                     if e.key in keybinds.TOGGLE_PROFILER:
                         profiling.get_instance().toggle()
             cur_mode = self.current_mode
@@ -61,13 +62,14 @@ class GameLoop:
             pygame.display.flip()
 
             if config.Debug.fps_test:
-                pygame.display.set_caption(f"{config.Display.title} {int(self.clock.get_fps())} FPS")
+                pygame.display.set_caption(
+                    f"{config.Display.title} {int(self.clock.get_fps())} FPS"
+                )
 
             dt = self.clock.tick(TARGET_FPS) / 1000.0
 
 
 class GameMode:
-
     def __init__(self, loop: GameLoop):
         self.loop: GameLoop = loop
 
@@ -87,7 +89,6 @@ class GameMode:
 
 
 class MainMenuMode(GameMode):
-
     def __init__(self, loop: GameLoop):
         super().__init__(loop)
         self.selected_option_idx = 0
@@ -96,7 +97,7 @@ class MainMenuMode(GameMode):
             ("help", lambda: self.help_pressed()),
             ("settings", lambda: self.settings_pressed()),
             ("credits", lambda: self.credits_pressed()),
-            ("exit", lambda: self.exit_pressed())
+            ("exit", lambda: self.exit_pressed()),
         ]
 
         self.title_font = fonts.get_font(config.FontSize.title)
@@ -105,6 +106,7 @@ class MainMenuMode(GameMode):
         import gameplay.levels as levels
         import rendering.threedee as threedee
         import rendering.neon as neon
+
         self.bg_level = levels.InfiniteGeneratingLevel(10)
         self.bg_camera = threedee.Camera3D()
         self.bg_renderer = neon.NeonRenderer()
@@ -114,18 +116,22 @@ class MainMenuMode(GameMode):
 
     def start_pressed(self):
         import gameplay.gamestuff  # shh don't tell pylint about this
+
         self.loop.set_mode(gameplay.gamestuff.GameplayMode(self.loop))
 
     def help_pressed(self):
         import menus.help_menu as help_menu
+
         self.loop.set_mode(help_menu.HelpMenuMode(self.loop, self))
 
     def settings_pressed(self):
         import menus.settings_menu as settings_menu
+
         self.loop.set_mode(settings_menu.SettingsMenuMode(self.loop))
 
     def credits_pressed(self):
         import menus.credits_menu as credits_menu
+
         self.loop.set_mode(credits_menu.CreditsMenuMode(self.loop, self))
 
     def exit_pressed(self):
@@ -136,13 +142,19 @@ class MainMenuMode(GameMode):
             if e.type == pygame.KEYDOWN:
                 if e.key in keybinds.MENU_UP:
                     SoundManager.play("blip")
-                    self.selected_option_idx = (self.selected_option_idx - 1) % len(self.options)
+                    self.selected_option_idx = (self.selected_option_idx - 1) % len(
+                        self.options
+                    )
                 elif e.key in keybinds.MENU_DOWN:
                     SoundManager.play("blip")
-                    self.selected_option_idx = (self.selected_option_idx + 1) % len(self.options)
+                    self.selected_option_idx = (self.selected_option_idx + 1) % len(
+                        self.options
+                    )
                 elif e.key in keybinds.MENU_ACCEPT:
                     SoundManager.play("accept")
-                    self.options[self.selected_option_idx][1]()  # activate the option's lambda
+                    self.options[self.selected_option_idx][
+                        1
+                    ]()  # activate the option's lambda
                     return
                 elif e.key in keybinds.MENU_CANCEL:
                     SoundManager.play("blip2")
@@ -157,12 +169,13 @@ class MainMenuMode(GameMode):
         self._draw_bg(screen)
 
         screen_size = screen.get_size()
-        title_surface = self.title_font.render('TEMPEST RUN', True, neon.WHITE)
+        title_surface = self.title_font.render("TEMPEST RUN", True, neon.WHITE)
 
         title_size = title_surface.get_size()
         title_y = screen_size[1] // 3 - title_size[1] // 2
-        screen.blit(title_surface, dest=(screen_size[0] // 2 - title_size[0] // 2,
-                                         title_y))
+        screen.blit(
+            title_surface, dest=(screen_size[0] // 2 - title_size[0] // 2, title_y)
+        )
 
         option_y = max(screen_size[1] // 2, title_y + title_size[1])
         for i in range(len(self.options)):
@@ -172,28 +185,42 @@ class MainMenuMode(GameMode):
 
             option_surface = self.option_font.render(option_text.upper(), True, color)
             option_size = option_surface.get_size()
-            screen.blit(option_surface, dest=(screen_size[0] // 2 - option_size[0] // 2, option_y))
+            screen.blit(
+                option_surface,
+                dest=(screen_size[0] // 2 - option_size[0] // 2, option_y),
+            )
             option_y += option_size[1]
 
     def _update_bg(self, dt):
-        rot_speed = 10    # degrees per sec
+        rot_speed = 10  # degrees per sec
         move_speed = 5  # units per sec
         self.bg_camera.position.z += dt * move_speed
         self.bg_camera.position.y = -1
-        self.bg_level.set_rotation(self.bg_level.get_rotation(self.bg_camera.position.z) + rot_speed * dt)
+        self.bg_level.set_rotation(
+            self.bg_level.get_rotation(self.bg_camera.position.z) + rot_speed * dt
+        )
 
     def _draw_bg(self, screen):
         import rendering.levelbuilder3d as levelbuilder3d
         import rendering.neon as neon
+
         cur_z = self.bg_camera.position.z
         cell_len = 20
 
         all_3d_lines = []
         for i in range(-1, 20):
-            all_3d_lines.extend(levelbuilder3d.build_section((i + cur_z // cell_len) * cell_len, cell_len, self.bg_level))
+            all_3d_lines.extend(
+                levelbuilder3d.build_section(
+                    (i + cur_z // cell_len) * cell_len, cell_len, self.bg_level
+                )
+            )
 
-        lines_to_draw = self.bg_camera.project_to_surface(screen, all_3d_lines, depth_shading=(0, 100))
-        self.bg_renderer.draw_lines(screen, neon.NeonLine.convert_line2ds_to_neon_lines(lines_to_draw))
+        lines_to_draw = self.bg_camera.project_to_surface(
+            screen, all_3d_lines, depth_shading=(0, 100)
+        )
+        self.bg_renderer.draw_lines(
+            screen, neon.NeonLine.convert_line2ds_to_neon_lines(lines_to_draw)
+        )
 
 
 def create_or_recreate_window():
@@ -201,7 +228,9 @@ def create_or_recreate_window():
 
     pygame.display.set_mode(size, pygame.SCALED | pygame.RESIZABLE)
     pygame.display.set_caption(config.Display.title)
-    pygame.display.set_icon(pygame.image.load(utils.resource_path("assets/icon/icon.png")))
+    pygame.display.set_icon(
+        pygame.image.load(utils.resource_path("assets/icon/icon.png"))
+    )
 
 
 def _main():

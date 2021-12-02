@@ -67,56 +67,31 @@ _default_configs = {
         "title": "TEMPEST RUN",
         "camera_bob": True,
         "use_player_art": True,
-        "depth_shade": False
-        },
-
-    "FontSize": {
-        "title": 64,
-        "option": 36,
-        "info": 24,
-        "score": 30
-        },
-
-    "Music": {
-        "enabled": True,
-        "volume": 0.5
-        },
-
-    "Sound": {
-        "enabled": True,
-        "volume": 0.5
-        },
-
-    "Debug": {
-        "use_neon": True,
-        "fps_test": False,
-        "jumping_enemies": False
-        },
-
+        "depth_shade": False,
+    },
+    "FontSize": {"title": 64, "option": 36, "info": 24, "score": 30},
+    "Music": {"enabled": True, "volume": 0.5},
+    "Sound": {"enabled": True, "volume": 0.5},
+    "Debug": {"use_neon": True, "fps_test": False, "jumping_enemies": False},
     "KeyBinds": {
         "Game": {
             "jump": [pygame.K_w, pygame.K_UP, pygame.K_SPACE],
             "left": [pygame.K_a, pygame.K_LEFT],
             "right": [pygame.K_d, pygame.K_RIGHT],
             "slide": [pygame.K_s, pygame.K_DOWN],
-            "reset": [pygame.K_r]
-            },
-
+            "reset": [pygame.K_r],
+        },
         "Menu": {
             "up": [pygame.K_w, pygame.K_UP],
             "down": [pygame.K_s, pygame.K_DOWN],
             "right": [pygame.K_d, pygame.K_RIGHT],
             "left": [pygame.K_a, pygame.K_LEFT],
             "accept": [pygame.K_RETURN, pygame.K_SPACE],
-            "cancel": [pygame.K_ESCAPE, pygame.K_AC_BACK]
-            },
-
-        "Toogle": {
-            "neon": [pygame.K_n],
-            "profiler": []
-            }
-        }
-    }
+            "cancel": [pygame.K_ESCAPE, pygame.K_AC_BACK],
+        },
+        "Toogle": {"neon": [pygame.K_n], "profiler": []},
+    },
+}
 
 
 def _apply_configs_from_json(configuration):
@@ -222,5 +197,3 @@ def save_configs_to_disk():
     except Exception:
         print("ERROR: failed to save configs to: {}".format(path))
         traceback.print_exc()
-
-

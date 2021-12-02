@@ -28,8 +28,12 @@ def build_section(z, length, level) -> List[threedee.Line3D]:
     far_ring = get_ring_points(z + length, level)
 
     for i in range(level.number_of_lanes()):
-        ground_lines.append(threedee.Line3D(near_ring[i], far_ring[i], color=level.get_color(z)))
-        ground_lines.append(threedee.Line3D(far_ring[i], far_ring[i - 1], color=level.get_color(z)))
+        ground_lines.append(
+            threedee.Line3D(near_ring[i], far_ring[i], color=level.get_color(z))
+        )
+        ground_lines.append(
+            threedee.Line3D(far_ring[i], far_ring[i - 1], color=level.get_color(z))
+        )
 
     return ground_lines
 
@@ -46,7 +50,7 @@ def get_rotation_to_make_lane_at_bottom(z, lane, level):
 
 
 EXPLOSION_DURATION = 1  # second
-EXPLOSION_DIST = 0.75      # units
+EXPLOSION_DIST = 0.75  # units
 EXPLOSION_ROT_SPEED = 20
 EXPLOSION_SRC_POINT = Vector3(0, 0, 0)
 
@@ -62,28 +66,36 @@ def build_obstacle(obs, level, player) -> List[threedee.Line3D]:
         elif time_dead <= 0:
             pass
         elif time_dead > 0:
-            model = blow_up(model,
-                            EXPLOSION_SRC_POINT,
-                            EXPLOSION_DIST * (time_dead / EXPLOSION_DURATION),
-                            rotation_speed=EXPLOSION_ROT_SPEED)
+            model = blow_up(
+                model,
+                EXPLOSION_SRC_POINT,
+                EXPLOSION_DIST * (time_dead / EXPLOSION_DURATION),
+                rotation_speed=EXPLOSION_ROT_SPEED,
+            )
     else:
         # this makes enemies jump when the player approaches, so the player slides underneath them
         # instead of killing them. It makes it a little more clear that you can't jump over them,
         # but I don't really like it.
-        if obs.should_rise_with_player() and (obs.lane - player.lane) % level.number_of_lanes() == 0:
+        if (
+            obs.should_rise_with_player()
+            and (obs.lane - player.lane) % level.number_of_lanes() == 0
+        ):
             z_range = 30
             z_dist = abs(obs.z - player.z)
             if z_dist < z_range:
                 model = [l.shift(dy=0.4 * (1 - z_dist / z_range)) for l in model]
-    return align_shape_to_level_surface(model,
-                                        obs.z,
-                                        obs.z + obs.length,
-                                        obs.lane,
-                                        level,
-                                        obs.should_squeeze())
+    return align_shape_to_level_surface(
+        model, obs.z, obs.z + obs.length, obs.lane, level, obs.should_squeeze()
+    )
 
 
-def blow_up(lines: List[threedee.Line3D], from_pt: Vector3, amount, rotation_speed=30, axis=(0, 1)) -> List[threedee.Line3D]:
+def blow_up(
+    lines: List[threedee.Line3D],
+    from_pt: Vector3,
+    amount,
+    rotation_speed=30,
+    axis=(0, 1),
+) -> List[threedee.Line3D]:
     res = []
     for l in lines:
         c = l.center()
@@ -102,14 +114,18 @@ def blow_up(lines: List[threedee.Line3D], from_pt: Vector3, amount, rotation_spe
     return res
 
 
-def build_rect(z_start, length, level, lane_n, hover_height, color, width, with_x=False) -> List[threedee.Line3D]:
+def build_rect(
+    z_start, length, level, lane_n, hover_height, color, width, with_x=False
+) -> List[threedee.Line3D]:
     """Builds a 3D rectangle lying flat against the surface of the level."""
     near_ring = get_ring_points(z_start, level)
     far_ring = get_ring_points(z_start + length, level)
-    corners = [near_ring[lane_n % level.number_of_lanes()],
-               near_ring[(lane_n - 1) % level.number_of_lanes()],
-               far_ring[(lane_n - 1) % level.number_of_lanes()],
-               far_ring[lane_n % level.number_of_lanes()]]
+    corners = [
+        near_ring[lane_n % level.number_of_lanes()],
+        near_ring[(lane_n - 1) % level.number_of_lanes()],
+        far_ring[(lane_n - 1) % level.number_of_lanes()],
+        far_ring[lane_n % level.number_of_lanes()],
+    ]
 
     # make the rect hover a bit
     inset_corners = []
@@ -122,12 +138,20 @@ def build_rect(z_start, length, level, lane_n, hover_height, color, width, with_
         threedee.Line3D(inset_corners[0], inset_corners[1], color=color, width=width),
         threedee.Line3D(inset_corners[1], inset_corners[2], color=color, width=width),
         threedee.Line3D(inset_corners[2], inset_corners[3], color=color, width=width),
-        threedee.Line3D(inset_corners[3], inset_corners[0], color=color, width=width)
+        threedee.Line3D(inset_corners[3], inset_corners[0], color=color, width=width),
     ]
 
     if with_x:
-        res.append(threedee.Line3D(inset_corners[0], inset_corners[2], color=color, width=width))
-        res.append(threedee.Line3D(inset_corners[1], inset_corners[3], color=color, width=width))
+        res.append(
+            threedee.Line3D(
+                inset_corners[0], inset_corners[2], color=color, width=width
+            )
+        )
+        res.append(
+            threedee.Line3D(
+                inset_corners[1], inset_corners[3], color=color, width=width
+            )
+        )
 
     return res
 
@@ -151,7 +175,9 @@ def load_player_art(w=0.8, h=0.5):
 
             for filename in sorted(os.listdir(safe_path)):
                 if filename.endswith(".json"):
-                    with open(utility_functions.resource_path(raw_path + "/" + filename)) as f:
+                    with open(
+                        utility_functions.resource_path(raw_path + "/" + filename)
+                    ) as f:
                         for line in json.load(f):
                             for pt in line:
                                 x = float(pt[0])
@@ -176,25 +202,51 @@ def load_player_art(w=0.8, h=0.5):
                 lines_for_frame = []
                 lines_for_frame_xflip = []
                 if filename.endswith(".json"):
-                    with open(utility_functions.resource_path(raw_path + "/" + filename)) as f:
+                    with open(
+                        utility_functions.resource_path(raw_path + "/" + filename)
+                    ) as f:
                         for line in json.load(f):
                             norm_pts = []
                             norm_pts_xflip = []
                             for pt in line:
                                 x = float(pt[0])
                                 y = float(pt[1])
-                                norm_pts.append((
-                                    utility_functions.map_from_interval_to_interval(x, [min_x, max_x], [-w/2, w/2]),
-                                    utility_functions.map_from_interval_to_interval(y, [max_y, min_y], [0, h])
-                                ))
-                                norm_pts_xflip.append((
-                                    utility_functions.map_from_interval_to_interval(x, [min_x, max_x], [w/2, -w/2]),
-                                    utility_functions.map_from_interval_to_interval(y, [max_y, min_y], [0, h])
-                                ))
-                            lines_for_frame.append(threedee.Line3D(Vector3(norm_pts[0][0], norm_pts[0][1], 0),
-                                                                   Vector3(norm_pts[1][0], norm_pts[1][1], 0)))
-                            lines_for_frame_xflip.append(threedee.Line3D(Vector3(norm_pts_xflip[0][0], norm_pts_xflip[0][1], 0),
-                                                                   Vector3(norm_pts_xflip[1][0], norm_pts_xflip[1][1], 0)))
+                                norm_pts.append(
+                                    (
+                                        utility_functions.map_from_interval_to_interval(
+                                            x, [min_x, max_x], [-w / 2, w / 2]
+                                        ),
+                                        utility_functions.map_from_interval_to_interval(
+                                            y, [max_y, min_y], [0, h]
+                                        ),
+                                    )
+                                )
+                                norm_pts_xflip.append(
+                                    (
+                                        utility_functions.map_from_interval_to_interval(
+                                            x, [min_x, max_x], [w / 2, -w / 2]
+                                        ),
+                                        utility_functions.map_from_interval_to_interval(
+                                            y, [max_y, min_y], [0, h]
+                                        ),
+                                    )
+                                )
+                            lines_for_frame.append(
+                                threedee.Line3D(
+                                    Vector3(norm_pts[0][0], norm_pts[0][1], 0),
+                                    Vector3(norm_pts[1][0], norm_pts[1][1], 0),
+                                )
+                            )
+                            lines_for_frame_xflip.append(
+                                threedee.Line3D(
+                                    Vector3(
+                                        norm_pts_xflip[0][0], norm_pts_xflip[0][1], 0
+                                    ),
+                                    Vector3(
+                                        norm_pts_xflip[1][0], norm_pts_xflip[1][1], 0
+                                    ),
+                                )
+                            )
                 frames.append(lines_for_frame)
                 frames.append(lines_for_frame_xflip)
             _CACHED_PLAYER_ART[anim_name] = frames
@@ -204,12 +256,16 @@ def load_player_art(w=0.8, h=0.5):
 
 def get_player_shape_at_origin(player) -> List[threedee.Line3D]:
 
-    player_mode = player.get_mode() if not player.is_dead() else player.get_last_mode_before_death()
+    player_mode = (
+        player.get_mode()
+        if not player.is_dead()
+        else player.get_last_mode_before_death()
+    )
 
     art_to_use = None
-    if player_mode == 'jump':
+    if player_mode == "jump":
         art_to_use = "jump"
-    elif player_mode == 'slide':
+    elif player_mode == "slide":
         art_to_use = "slide"
     else:
         art_to_use = "run"
@@ -218,7 +274,11 @@ def get_player_shape_at_origin(player) -> List[threedee.Line3D]:
     color = neon.YELLOW if not player.is_dead() else neon.RED
     width = 2
 
-    if not config.Display.use_player_art or art_to_use not in _CACHED_PLAYER_ART or len(_CACHED_PLAYER_ART[art_to_use]) == 0:
+    if (
+        not config.Display.use_player_art
+        or art_to_use not in _CACHED_PLAYER_ART
+        or len(_CACHED_PLAYER_ART[art_to_use]) == 0
+    ):
         # just a rectangle
         width = 0.5 if not player.is_sliding() else 0.6
         height = 0.4 if not player.is_sliding() else 0.2
@@ -227,15 +287,20 @@ def get_player_shape_at_origin(player) -> List[threedee.Line3D]:
         bot_left = Vector3(-width / 2.0, dist_from_ground, 0)
         bot_right = Vector3(width / 2.0, dist_from_ground, 0)
 
-        return [threedee.Line3D(top_left, top_right, color=color, width=width),
-                threedee.Line3D(top_right, bot_right, color=color, width=width),
-                threedee.Line3D(bot_right, bot_left, color=color, width=width),
-                threedee.Line3D(bot_left, top_left, color=color, width=width)]
+        return [
+            threedee.Line3D(top_left, top_right, color=color, width=width),
+            threedee.Line3D(top_right, bot_right, color=color, width=width),
+            threedee.Line3D(bot_right, bot_left, color=color, width=width),
+            threedee.Line3D(bot_left, top_left, color=color, width=width),
+        ]
     else:
         frame_n = int(player.z) // 20
         all_frames = _CACHED_PLAYER_ART[art_to_use]
         lines_in_frame = all_frames[frame_n % len(all_frames)]
-        return [l.shift(dy=dist_from_ground, new_color=color, new_width=width) for l in lines_in_frame]
+        return [
+            l.shift(dy=dist_from_ground, new_color=color, new_width=width)
+            for l in lines_in_frame
+        ]
 
 
 def get_player_shape(player, level) -> List[threedee.Line3D]:
@@ -245,14 +310,25 @@ def get_player_shape(player, level) -> List[threedee.Line3D]:
         if death_dur > EXPLOSION_DURATION:
             return []
         elif death_dur > 0:
-            shape_2d = blow_up(shape_2d,
-                               EXPLOSION_SRC_POINT,
-                               EXPLOSION_DIST * (death_dur / EXPLOSION_DURATION),
-                               2 * EXPLOSION_ROT_SPEED)
-    return align_shape_to_level_surface(shape_2d, player.z, player.z, player.lane, level, squeeze=False)
+            shape_2d = blow_up(
+                shape_2d,
+                EXPLOSION_SRC_POINT,
+                EXPLOSION_DIST * (death_dur / EXPLOSION_DURATION),
+                2 * EXPLOSION_ROT_SPEED,
+            )
+    return align_shape_to_level_surface(
+        shape_2d, player.z, player.z, player.lane, level, squeeze=False
+    )
 
 
-def align_shape_to_level_surface(lines_to_xform: List[threedee.Line3D], z_start: float, z_end: float, lane_n: int, level, squeeze=False) -> List[threedee.Line3D]:
+def align_shape_to_level_surface(
+    lines_to_xform: List[threedee.Line3D],
+    z_start: float,
+    z_end: float,
+    lane_n: int,
+    level,
+    squeeze=False,
+) -> List[threedee.Line3D]:
     """
     :param lines_to_xform: the shape to transform
     :param z_start: z position of the object in the level
@@ -287,17 +363,35 @@ def align_shape_to_level_surface(lines_to_xform: List[threedee.Line3D], z_start:
     res = []
 
     def convert_pt(pt):
-        z_factor = utility_functions.map_from_interval_to_interval(pt.z, [-1, 1], [0, 1])
+        z_factor = utility_functions.map_from_interval_to_interval(
+            pt.z, [-1, 1], [0, 1]
+        )
         vert_factor = pt.y
-        horz_factor = utility_functions.map_from_interval_to_interval(pt.x, [-1, 1], [0, 1])
+        horz_factor = utility_functions.map_from_interval_to_interval(
+            pt.x, [-1, 1], [0, 1]
+        )
 
         if not squeeze:
-            near_pt = near_left + horz_factor * (near_right - near_left) + vert_factor * (near_top - near_bottom)
-            far_pt = far_left + horz_factor * (far_right - far_left) + vert_factor * (far_top - far_bottom)
+            near_pt = (
+                near_left
+                + horz_factor * (near_right - near_left)
+                + vert_factor * (near_top - near_bottom)
+            )
+            far_pt = (
+                far_left
+                + horz_factor * (far_right - far_left)
+                + vert_factor * (far_top - far_bottom)
+            )
             return utility_functions.lerp(z_factor, near_pt, far_pt)
         else:
-            near_pt = utility_functions.lerp(vert_factor, near_left + horz_factor * (near_right - near_left), near_top)
-            far_pt = utility_functions.lerp(vert_factor, far_left + horz_factor * (far_right - far_left), far_top)
+            near_pt = utility_functions.lerp(
+                vert_factor,
+                near_left + horz_factor * (near_right - near_left),
+                near_top,
+            )
+            far_pt = utility_functions.lerp(
+                vert_factor, far_left + horz_factor * (far_right - far_left), far_top
+            )
             return utility_functions.lerp(z_factor, near_pt, far_pt)
 
     for l in lines_to_xform:

@@ -76,9 +76,9 @@ def _calc_bit_count_str():
 
 def _get_icon_path(os_version_str):
     if os_version_str == _MAC:
-        return str(pathlib.Path('assets/icon/icon.icns'))
+        return str(pathlib.Path("assets/icon/icon.icns"))
     else:
-        return str(pathlib.Path('assets/icon/icon.ico'))
+        return str(pathlib.Path("assets/icon/icon.ico"))
 
 
 def do_it():
@@ -93,8 +93,11 @@ def do_it():
 
     os_bit_count_str = _calc_bit_count_str()
 
-    make_the_exe = _ask_yes_or_no_question("Create v{} executable for {} ({})?".format(
-        VERSION, pretty_os_str, os_bit_count_str))
+    make_the_exe = _ask_yes_or_no_question(
+        "Create v{} executable for {} ({})?".format(
+            VERSION, pretty_os_str, os_bit_count_str
+        )
+    )
 
     if not make_the_exe:
         print("INFO: make_exe was canceled by user, exiting")
@@ -114,8 +117,13 @@ def do_it():
 
     version_num_str_no_dots = VERSION.replace(".", "_").replace("-", "_")
 
-    dist_dir = pathlib.Path("dist/tempestrun_v{}_{}_{}".format(
-        version_num_str_no_dots.lower(), pretty_os_str.lower(), os_bit_count_str.lower()))
+    dist_dir = pathlib.Path(
+        "dist/tempestrun_v{}_{}_{}".format(
+            version_num_str_no_dots.lower(),
+            pretty_os_str.lower(),
+            os_bit_count_str.lower(),
+        )
+    )
 
     if os.path.exists(str(dist_dir)):
         ans = _ask_yes_or_no_question("Overwrite {}?".format(dist_dir))
@@ -133,8 +141,11 @@ def do_it():
         print("INFO: launching pyinstaller...\n")
 
         # note that this call blocks until the process is finished
-        os.system("pyinstaller {} --distpath {} --workpath {}".format(
-            spec_filename, dist_dir_subdir, temp_dir))
+        os.system(
+            "pyinstaller {} --distpath {} --workpath {}".format(
+                spec_filename, dist_dir_subdir, temp_dir
+            )
+        )
 
         print("\nINFO: cleaning up {}".format(temp_dir))
 
@@ -146,17 +157,17 @@ def do_it():
         print("INFO: chmod'ing execution permissions to all users (linux)")
         exe_path = pathlib.Path("{}/TempestRun".format(dist_dir_subdir))
         if not os.path.exists(str(exe_path)):
-            raise ValueError("couldn't find exe to apply exec permissions: {}".format(exe_path))
+            raise ValueError(
+                "couldn't find exe to apply exec permissions: {}".format(exe_path)
+            )
         else:
             st = os.stat(str(exe_path))
-            os.chmod(str(exe_path), st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            os.chmod(
+                str(exe_path), st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
+            )
 
     print("\nINFO: make_exe.py has finished")
 
 
 if __name__ == "__main__":
     do_it()
-
-
-
-

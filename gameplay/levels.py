@@ -11,7 +11,16 @@ import random
 class Obstacle:
     """Base class for obstacles"""
 
-    def __init__(self, lane, z, length, color, can_jump_over, can_slide_through, can_run_through=False):
+    def __init__(
+        self,
+        lane,
+        z,
+        length,
+        color,
+        can_jump_over,
+        can_slide_through,
+        can_run_through=False,
+    ):
         # the lane the obstacle covers
         self.lane = lane
 
@@ -50,7 +59,10 @@ class Obstacle:
         """
         if player.is_dead() or self._is_dead:
             return False
-        if player.z + player.length / 2 < self.z or self.z + self.length < player.last_z_pos:
+        if (
+            player.z + player.length / 2 < self.z
+            or self.z + self.length < player.last_z_pos
+        ):
             return False
 
         if player.is_jumping():
@@ -74,7 +86,7 @@ class Obstacle:
     def _handle_death(self):
         if not self._is_dead:
             self._is_dead = True
-            SoundManager.play('kill')
+            SoundManager.play("kill")
             self._dead_since = time.time()
 
     def can_jump_over(self):
@@ -116,12 +128,11 @@ class Obstacle:
             Line3D(Vector3(-1, 0, -1), Vector3(-1, 0, 1), color=self.get_color()),
             # 'X' through the middle
             Line3D(Vector3(-1, 0, 1), Vector3(1, 0, -1), color=self.get_color()),
-            Line3D(Vector3(1, 0, 1), Vector3(-1, 0, -1), color=self.get_color())
+            Line3D(Vector3(1, 0, 1), Vector3(-1, 0, -1), color=self.get_color()),
         ]
 
 
 class Spikes(Obstacle):
-
     def __init__(self, lane, z, length):
         super().__init__(lane, z, length, neon.RED, True, False)
 
@@ -137,7 +148,7 @@ class Spikes(Obstacle):
             Vector3(0, height, 0),
             Vector3(0.4, 0, 0),
             Vector3(0.8, height, 0),
-            Vector3(1, 0, 0)
+            Vector3(1, 0, 0),
         ]
         return Line3D.make_lines_from_list(pts, closed=True, color=self.get_color())
 
@@ -163,10 +174,20 @@ class Enemy(Obstacle):
         bot_right = Vector3(0.5, 0.1, 0)
         top_left = Vector3(-0.5, 0.3, 0)
         top_right = Vector3(0.5, 0.3, 0)
-        outline = Line3D.make_lines_from_list([bot_left, bot_right, top_right, top_left], closed=True, color=self.get_color())
-        left_eye = Line3D(Vector3(-.4, 0.25, 0), Vector3(-.1, 0.2, 0), color=self.get_color())
-        right_eye = Line3D(Vector3(0.4, 0.25, 0), Vector3(.1, 0.2, 0), color=self.get_color())
-        mouth = Line3D(Vector3(-0.4, 0.15, 0), Vector3(0.4, 0.15, 0), color=self.get_color())
+        outline = Line3D.make_lines_from_list(
+            [bot_left, bot_right, top_right, top_left],
+            closed=True,
+            color=self.get_color(),
+        )
+        left_eye = Line3D(
+            Vector3(-0.4, 0.25, 0), Vector3(-0.1, 0.2, 0), color=self.get_color()
+        )
+        right_eye = Line3D(
+            Vector3(0.4, 0.25, 0), Vector3(0.1, 0.2, 0), color=self.get_color()
+        )
+        mouth = Line3D(
+            Vector3(-0.4, 0.15, 0), Vector3(0.4, 0.15, 0), color=self.get_color()
+        )
         return outline + [left_eye, right_eye, mouth]
 
 
@@ -207,9 +228,12 @@ class Wall(Obstacle):
         r1 = Vector3(1, 0, 0)
         r2 = Vector3(1, height, 0)
 
-        return Line3D.make_lines_from_list([l1, l2, r2, r1], closed=True, color=self.get_color()) + \
-            [Line3D(l1, r2, color=self.get_color()),
-             Line3D(l2, r1, color=self.get_color())]
+        return Line3D.make_lines_from_list(
+            [l1, l2, r2, r1], closed=True, color=self.get_color()
+        ) + [
+            Line3D(l1, r2, color=self.get_color()),
+            Line3D(l2, r1, color=self.get_color()),
+        ]
 
 
 class Level:
@@ -262,13 +286,17 @@ class Level:
 
 
 class GenerationParameters:
-
     def __init__(self):
-        self.cell_length = 20     # how far apart obstacles are
-        self.speeds = [(0, 60),   # at z = [0], the speed will be [1]. In between, values are interpolated linearly.
-                       (3000, 90),
-                       (10000, 120),   # 120 is very fast but still playable
-                       (100000, 200)]  # 200 is insane
+        self.cell_length = 20  # how far apart obstacles are
+        self.speeds = [
+            (
+                0,
+                60,
+            ),  # at z = [0], the speed will be [1]. In between, values are interpolated linearly.
+            (3000, 90),
+            (10000, 120),  # 120 is very fast but still playable
+            (100000, 200),
+        ]  # 200 is insane
 
     def get_player_speed(self, z):
         if z <= self.speeds[0][0]:
@@ -277,22 +305,32 @@ class GenerationParameters:
             return self.speeds[-1][1]
         else:
             for i in range(1, len(self.speeds)):
-                z1 = self.speeds[i-1][0]
+                z1 = self.speeds[i - 1][0]
                 z2 = self.speeds[i][0]
                 if z1 <= z <= z2:
-                    return utils.lerp((z - z1) / (z2 - z1), self.speeds[i-1][1], self.speeds[i][1])
+                    return utils.lerp(
+                        (z - z1) / (z2 - z1), self.speeds[i - 1][1], self.speeds[i][1]
+                    )
 
 
 class InfiniteGeneratingLevel(Level):
-
     def __init__(self, lanes, gen_params=None):
         super().__init__(lanes)
         self._obstacle_grid = {}  # (lane_n, cell_idx) -> Obstacle
         self._currently_loaded_cell_range = None  # will be [int, int] if populated
-        self._gen_params = gen_params if gen_params is not None else GenerationParameters()
+        self._gen_params = (
+            gen_params if gen_params is not None else GenerationParameters()
+        )
 
         self.color_dist = 1000  # color changes every X cells
-        self.level_colors_to_use = [neon.BLUE, neon.CYAN, neon.WHITE, neon.YELLOW, neon.ORANGE, neon.BLACK]
+        self.level_colors_to_use = [
+            neon.BLUE,
+            neon.CYAN,
+            neon.WHITE,
+            neon.YELLOW,
+            neon.ORANGE,
+            neon.BLACK,
+        ]
 
     def get_cell_length(self):
         return self._gen_params.cell_length
@@ -301,7 +339,9 @@ class InfiniteGeneratingLevel(Level):
         idx1 = int(z // self.color_dist) % len(self.level_colors_to_use)
         idx2 = int((z // self.color_dist + 1) % len(self.level_colors_to_use))
         amount = (z % self.color_dist) / self.color_dist
-        return self.level_colors_to_use[idx1].lerp(self.level_colors_to_use[idx2], amount)
+        return self.level_colors_to_use[idx1].lerp(
+            self.level_colors_to_use[idx2], amount
+        )
 
     def get_player_speed(self, z: float):
         return self._gen_params.get_player_speed(z)
@@ -340,10 +380,17 @@ class InfiniteGeneratingLevel(Level):
 
     def unload_obstacles(self, z_end):
         cell_end = int(z_end / self.get_cell_length())
-        if self._currently_loaded_cell_range is None or self._currently_loaded_cell_range[0] >= cell_end:
+        if (
+            self._currently_loaded_cell_range is None
+            or self._currently_loaded_cell_range[0] >= cell_end
+        ):
             pass  # nothing to unload
         else:
-            self._obstacle_grid = {p: self._obstacle_grid[p] for p in self._obstacle_grid if p[1] >= cell_end}
+            self._obstacle_grid = {
+                p: self._obstacle_grid[p]
+                for p in self._obstacle_grid
+                if p[1] >= cell_end
+            }
             if cell_end < self._currently_loaded_cell_range[1]:
                 # we unloaded a portion of the loaded cells
                 self._currently_loaded_cell_range[0] = cell_end
@@ -387,4 +434,8 @@ class InfiniteGeneratingLevel(Level):
         self._currently_loaded_cell_range[0] = min(new_range[0], old_range[0])
         self._currently_loaded_cell_range[1] = max(new_range[1], old_range[1])
 
-        return [self._obstacle_grid[(n, i)] for i in range(cell_start, cell_end) if (n, i) in self._obstacle_grid]
+        return [
+            self._obstacle_grid[(n, i)]
+            for i in range(cell_start, cell_end)
+            if (n, i) in self._obstacle_grid
+        ]

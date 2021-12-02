@@ -10,7 +10,6 @@ import rendering.neon as neon
 
 
 class Line3D:
-
     def __init__(self, p1: Vector3, p2: Vector3, color=neon.WHITE, width=1):
         self.p1 = p1
         self.p2 = p2
@@ -18,19 +17,23 @@ class Line3D:
         self.width = width
 
     def __repr__(self):
-        return "{}(p1={}, p2={}, color={}, width={})".format(type(self).__name__, self.p1, self.p2, self.color, self.width)
+        return "{}(p1={}, p2={}, color={}, width={})".format(
+            type(self).__name__, self.p1, self.p2, self.color, self.width
+        )
 
-    def shift(self, dx=0, dy=0, dz=0, new_color=None, new_width=None) -> 'Line3D':
+    def shift(self, dx=0, dy=0, dz=0, new_color=None, new_width=None) -> "Line3D":
         delta = Vector3(dx, dy, dz)
-        return Line3D(self.p1 + delta,
-                      self.p2 + delta,
-                      color=self.color if new_color is None else new_color,
-                      width=self.width if new_width is None else new_width)
+        return Line3D(
+            self.p1 + delta,
+            self.p2 + delta,
+            color=self.color if new_color is None else new_color,
+            width=self.width if new_width is None else new_width,
+        )
 
     def center(self):
         return (self.p1 + self.p2) / 2
 
-    def rotate_on_z_axis(self, angle) -> 'Line3D':
+    def rotate_on_z_axis(self, angle) -> "Line3D":
         center = self.center()
 
         v1 = self.p1 - center
@@ -41,12 +44,17 @@ class Line3D:
         v2_xy = Vector2(v2.x, v2.y)
         v2_xy.rotate_ip(angle)
 
-        return Line3D(Vector3(v1_xy.x, v1_xy.y, v1.z) + center,
-                      Vector3(v2_xy.x, v2_xy.y, v2.z) + center,
-                      color=self.color, width=self.width)
+        return Line3D(
+            Vector3(v1_xy.x, v1_xy.y, v1.z) + center,
+            Vector3(v2_xy.x, v2_xy.y, v2.z) + center,
+            color=self.color,
+            width=self.width,
+        )
 
     @staticmethod
-    def make_lines_from_list(list_of_vec3s: List[Vector3], closed=False, color=neon.WHITE, width=1) -> List['Line3D']:
+    def make_lines_from_list(
+        list_of_vec3s: List[Vector3], closed=False, color=neon.WHITE, width=1
+    ) -> List["Line3D"]:
         res = []
         for i in range(len(list_of_vec3s)):
             p1 = list_of_vec3s[i]
@@ -58,8 +66,9 @@ class Line3D:
 
 
 class Line2D:
-
-    def __init__(self, p1: Vector2, p2: Vector2, color=neon.WHITE, inner_color=None, width=1):
+    def __init__(
+        self, p1: Vector2, p2: Vector2, color=neon.WHITE, inner_color=None, width=1
+    ):
         self.p1 = p1
         self.p2 = p2
         self.color = color
@@ -67,7 +76,9 @@ class Line2D:
         self.width = width
 
     def __repr__(self):
-        return "{}(p1={}, p2={}, color={}, width={})".format(type(self).__name__, self.p1, self.p2, self.color, self.width)
+        return "{}(p1={}, p2={}, color={}, width={})".format(
+            type(self).__name__, self.p1, self.p2, self.color, self.width
+        )
 
 
 # base code~
@@ -106,15 +117,19 @@ def get_matrix_looking_at(eye_xyz, target_xyz, up_vec):
     n.scale_to_length(1)
     u = up_vec.cross(n)
     v = n.cross(u)
-    res = numpy.array([[u[0], u[1], u[2], (-u).dot(eye_xyz)],
-                       [v[0], v[1], v[2], (-v).dot(eye_xyz)],
-                       [n[0], n[1], n[2], (-n).dot(eye_xyz)],
-                       [0, 0, 0, 1]], dtype=numpy.float32)
+    res = numpy.array(
+        [
+            [u[0], u[1], u[2], (-u).dot(eye_xyz)],
+            [v[0], v[1], v[2], (-v).dot(eye_xyz)],
+            [n[0], n[1], n[2], (-n).dot(eye_xyz)],
+            [0, 0, 0, 1],
+        ],
+        dtype=numpy.float32,
+    )
     return res
 
 
 class Camera3D:
-
     def __init__(self):
         self.position = Vector3(0, 0, 0)
         self.direction: Vector3 = Vector3(0, 0, 1)
@@ -122,14 +137,25 @@ class Camera3D:
         self.fov_degrees: float = 45  # vertical field of view
 
     def __repr__(self):
-        return "{}(pos={}, dir={})".format(type(self).__name__, self.position, self.direction)
+        return "{}(pos={}, dir={})".format(
+            type(self).__name__, self.position, self.direction
+        )
 
     def get_xform(self, surface_size):
-        view_mat = get_matrix_looking_at(self.position, self.position + self.direction, self.up)
-        proj_mat = perspective_matrix(self.fov_degrees / 180 * math.pi, surface_size[0] / surface_size[1], 0.5, 100000)
+        view_mat = get_matrix_looking_at(
+            self.position, self.position + self.direction, self.up
+        )
+        proj_mat = perspective_matrix(
+            self.fov_degrees / 180 * math.pi,
+            surface_size[0] / surface_size[1],
+            0.5,
+            100000,
+        )
         return proj_mat @ view_mat
 
-    def project_to_surface(self, surface, lines: List[Line3D], depth_shading=None) -> List[Line2D]:
+    def project_to_surface(
+        self, surface, lines: List[Line3D], depth_shading=None
+    ) -> List[Line2D]:
         res = []
         screen_dims = surface.get_size()
         camera_xform = self.get_xform(screen_dims)
@@ -164,11 +190,21 @@ class Camera3D:
                         inner_color = neon.BLACK
                         line_color = neon.BLACK
                     else:
-                        lerp_amt = (depth - depth_shading[0]) / (depth_shading[1] - depth_shading[0])
+                        lerp_amt = (depth - depth_shading[0]) / (
+                            depth_shading[1] - depth_shading[0]
+                        )
                         line_color = lines[i].color.lerp(neon.BLACK, lerp_amt)
                         inner_color = neon.WHITE.lerp(neon.BLACK, lerp_amt)
 
-                res.append(Line2D(p1, p2, color=line_color, inner_color=inner_color, width=lines[i].width))
+                res.append(
+                    Line2D(
+                        p1,
+                        p2,
+                        color=line_color,
+                        inner_color=inner_color,
+                        width=lines[i].width,
+                    )
+                )
 
         return res
 
@@ -184,7 +220,7 @@ def gen_cube(angle, size, center, color):
                 pts.append(Vector3(xz[0], y, xz[1]) * (size / 2) + center)
 
                 pt = pts[-1]
-                for n in pts[:len(pts)-1]:
+                for n in pts[: len(pts) - 1]:
                     if abs((pt - n).length() - size) <= 0.1:
                         res.append(Line3D(pt, n, color=color))
     return res
@@ -202,9 +238,11 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((600, 300), pygame.RESIZABLE)
     screen.convert()
 
-    neon_renderer = neon.NeonRenderer(ambient_bloom_kernel=(5, 5),
-                                      mid_tone_bloom_kernel=(3, 3),
-                                      highlight_bloom_kernel=None)
+    neon_renderer = neon.NeonRenderer(
+        ambient_bloom_kernel=(5, 5),
+        mid_tone_bloom_kernel=(3, 3),
+        highlight_bloom_kernel=None,
+    )
     neon_renderer.post_processing_darken_factor = 0.8
     use_neon = True
 
@@ -244,6 +282,7 @@ if __name__ == "__main__":
                     profiling.get_instance().toggle()
                 elif e.key == pygame.K_n:
                     import config
+
                     config.Debug.use_neon = not config.Debug.use_neon
 
         keys_held = pygame.key.get_pressed()
@@ -278,8 +317,8 @@ if __name__ == "__main__":
 
         lines = []
         for c in cubes:
-           c[0] += c[1]  # rotate
-           lines.extend(gen_cube(c[0], c[2], c[3], c[4]))
+            c[0] += c[1]  # rotate
+            lines.extend(gen_cube(c[0], c[2], c[3], c[4]))
 
         # lines = [Line3D(Vector3(0, 10, 0), Vector3(1, 10, 0))]
 
