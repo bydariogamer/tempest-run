@@ -1,0 +1,10 @@
+This game was born as a submission to Pygame Community Summer Team Jam (Pygame Jam 4)
+
+Jump over the red spikes, slide to kick the green enemies, evade the purple walls, and run as far as you can!
+
+The game is licensed under GNU General Public License (see LICENSE).
+
+We have permission to use all the assets that are in the game, but they are not under tha game license necesarily.
+
+Check the license of any file you find in assets before using it in any situation but this game.
+

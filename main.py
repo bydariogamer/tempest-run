@@ -1,3 +1,4 @@
+#!/bin/python3
 import pygame
 import sys
 
@@ -11,6 +12,8 @@ import rendering.levelbuilder3d as levelbuilder3d
 import gameplay.highscores as highscores
 import util.utility_functions as utils
 
+
+__version__ = "1.0.0"
 
 TARGET_FPS = config.Display.fps if not config.Debug.fps_test else -1
 
