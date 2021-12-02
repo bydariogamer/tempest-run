@@ -11,6 +11,14 @@ import config
 from sound_manager.SoundManager import SoundManager
 
 
+def _generate_square():
+    screen_w, screen_h = pygame.display.get_surface().get_size()
+    return [random.randint(0, screen_w),  # x position
+            screen_h + 25,                # y position
+            random.randint(0, 360),       # angle
+            random.randint(2, 10) / 2 * random.choice([-1, 1])]  # speed
+
+
 class HelpMenuMode(GameMode):
 
     def __init__(self, loop: GameLoop, prev_menu: GameMode):
@@ -25,18 +33,11 @@ class HelpMenuMode(GameMode):
         ]
 
         self.n_squares = 25
-        self.squares = [self._generate_square() for _ in range(self.n_squares)]  # format -> [x, y, angle, speed]
+        self.squares = [_generate_square() for _ in range(self.n_squares)]  # format -> [x, y, angle, speed]
 
         self.title_font = fonts.get_font(config.FontSize.title)
         self.option_font = fonts.get_font(config.FontSize.option)
         self.info_font = fonts.get_font(config.FontSize.info)
-
-    def _generate_square(self):
-        screen_w, screen_h = pygame.display.get_surface().get_size()
-        return [random.randint(0, screen_w),  # x position
-                screen_h + 25,                # y position
-                random.randint(0, 360),       # angle
-                random.randint(2, 10) / 2 * random.choice([-1, 1])]  # speed
 
     @staticmethod
     def get_square_points(x, y, angle, size=50):
@@ -65,7 +66,7 @@ class HelpMenuMode(GameMode):
         self.squares = [s for s in self.squares if s[1] > -50]  # purge squares that fell off the top of the screen
 
         while len(self.squares) < self.n_squares:
-            self.squares.append(self._generate_square())
+            self.squares.append(_generate_square())
 
         for e in events:
             if e.type == pygame.KEYDOWN:
