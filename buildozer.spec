@@ -13,7 +13,7 @@ package.domain = org.bydariogamer
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,ogg,wav,json
+#source.include_exts = py,png,jpg,kv,atlas,ttf,ogg,wav,json
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy,android,pygame,opencv,numpy,pathlib
+requirements = kivy,android,pygame,opencv,numpy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
