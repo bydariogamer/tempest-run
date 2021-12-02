@@ -4,7 +4,7 @@
 title = Tempest Run
 
 # (str) Package name
-package.name = tempest-run
+package.name = tempestrun
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.bydariogamer
@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,ogg,wav,json
 #source.include_patterns = assets/*,images/*.png
 
 # (list) Source files to exclude (let empty to not exclude anything)
-#source.exclude_exts = spec
+source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = .github,leaderboard,screenshots
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy,android,pygame,opencv,numpy,pathlib
+requirements = kivy,android,pygame,opencv,numpy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
