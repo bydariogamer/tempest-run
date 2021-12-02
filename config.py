@@ -52,7 +52,7 @@ class KeyBinds:
         right = [pygame.K_d, pygame.K_RIGHT]
         left = [pygame.K_a, pygame.K_LEFT]
         accept = [pygame.K_RETURN, pygame.K_SPACE]
-        cancel = [pygame.K_ESCAPE]
+        cancel = [pygame.K_ESCAPE, pygame.K_AC_BACK]
 
     class Toogle:
         neon = [pygame.K_n]
@@ -108,7 +108,7 @@ _default_configs = {
             "right": [pygame.K_d, pygame.K_RIGHT],
             "left": [pygame.K_a, pygame.K_LEFT],
             "accept": [pygame.K_RETURN, pygame.K_SPACE],
-            "cancel": [pygame.K_ESCAPE]
+            "cancel": [pygame.K_ESCAPE, pygame.K_AC_BACK]
             },
 
         "Toogle": {
