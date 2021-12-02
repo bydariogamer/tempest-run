@@ -14,17 +14,18 @@ import time
 
 
 class SoundManager:
-
-    # Class for Sound management
-    # stereo sound, but single channel playing [like original arcade machines]
+    """
+    Class for Sound management
+    stereo sound, but single channel playing [like original arcade machines]
+    """
 
     SOUND_PATHS = {
-        'death': 'assets/sounds/death',
-        'jump': 'assets/sounds/jump',
-        'kill': 'assets/sounds/kill',
-        'accept': 'assets/sounds/accept',
-        'blip': 'assets/sounds/blip',
-        'blip2': 'assets/sounds/blip2'
+        'death': os.path.abspath('assets/sounds/death'),
+        'jump': os.path.abspath('assets/sounds/jump'),
+        'kill': os.path.abspath('assets/sounds/kill'),
+        'accept': os.path.abspath('assets/sounds/accept'),
+        'blip': os.path.abspath('assets/sounds/blip'),
+        'blip2': os.path.abspath('assets/sounds/blip2'),
     }
     PRIORITIES = ['accept', 'death', 'jump', 'kill', 'blip2', 'blip']
 
@@ -34,8 +35,8 @@ class SoundManager:
     CHANNEL: pygame.mixer.Channel = None
 
     SONG_PATHS = {
-        "menu_theme": "assets/songs/menu_theme.ogg",
-        "game_theme": "assets/songs/game_theme.ogg"
+        "menu_theme": os.path.abspath("assets/songs/menu_theme.ogg"),
+        "game_theme": os.path.abspath("assets/songs/game_theme.ogg"),
     }
     CURRENT_SONG_ID: str = None
     IS_FADING = False
