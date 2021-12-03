@@ -226,7 +226,7 @@ class MainMenuMode(GameMode):
 def create_or_recreate_window():
     size = config.Display.width, config.Display.height
 
-    pygame.display.set_mode(size, pygame.SCALED | pygame.RESIZABLE)
+    pygame.display.set_mode(size, pygame.SCALED | pygame.FULLSCREEN)
     pygame.display.set_caption(config.Display.title)
     pygame.display.set_icon(
         pygame.image.load(utils.resource_path("assets/icon/icon.png"))
