@@ -1,6 +1,5 @@
 #!/bin/python3
 import pygame
-import sys
 
 import keybinds
 import rendering.neon as neon
@@ -54,6 +53,9 @@ class GameLoop:
                         )
                     if e.key in keybinds.TOGGLE_PROFILER:
                         profiling.get_instance().toggle()
+                    if e.key in keybinds.TOGGLE_FPS:
+                        config.Debug.fps_test = not config.Debug.fps_test
+
             cur_mode = self.current_mode
 
             cur_mode.update(dt, events)
@@ -62,9 +64,7 @@ class GameLoop:
             pygame.display.flip()
 
             if config.Debug.fps_test:
-                pygame.display.set_caption(
-                    f"{config.Display.title} {int(self.clock.get_fps())} FPS"
-                )
+                print(int(self.clock.get_fps()))
 
             dt = self.clock.tick(TARGET_FPS) / 1000.0
 
@@ -248,8 +248,8 @@ class MainMenuMode(GameMode):
 
 def create_or_recreate_window():
     size = config.Display.width, config.Display.height
-
-    pygame.display.set_mode(size, pygame.SCALED | pygame.RESIZABLE)
+    flags = pygame.SCALED | pygame.FULLSCREEN if config.Platform.IS_ANDROID else pygame.SCALED | pygame.RESIZABLE
+    pygame.display.set_mode(size, flags)
     pygame.display.set_caption(config.Display.title)
     pygame.display.set_icon(
         pygame.image.load(utils.resource_path("assets/icon/icon.png"))
@@ -258,7 +258,6 @@ def create_or_recreate_window():
 
 def _main():
     config.load_configs_from_disk()
-    config.Debug.fps_test = True if "--test" in sys.argv else False
 
     # create config.json on game start if it's been deleted
     if not config.get_config_path().exists():
