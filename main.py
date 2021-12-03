@@ -91,6 +91,10 @@ class GameMode:
 class MainMenuMode(GameMode):
     def __init__(self, loop: GameLoop):
         super().__init__(loop)
+
+        import gameplay.levels as levels
+        import rendering.threedee as threedee
+
         self.selected_option_idx = 0
         self.options = [
             ("start", lambda: self.start_pressed()),
@@ -99,13 +103,26 @@ class MainMenuMode(GameMode):
             ("credits", lambda: self.credits_pressed()),
             ("exit", lambda: self.exit_pressed()),
         ]
-
         self.title_font = fonts.get_font(config.FontSize.title)
         self.option_font = fonts.get_font(config.FontSize.option)
+        self.options_rects = []
 
-        import gameplay.levels as levels
-        import rendering.threedee as threedee
-        import rendering.neon as neon
+        title_size = self.title_font.render("TEMPEST RUN", True, (0, 0, 0)).get_size()
+        title_y = config.Display.height // 3 - title_size[1] // 2
+        option_y = max(config.Display.height // 2, title_y + title_size[1])
+        for i in range(len(self.options)):
+            option_text = self.options[i][0]
+            option_surface = self.option_font.render(option_text.upper(), True, (0, 0, 0))
+            option_size = option_surface.get_size()
+            option_y += option_size[1]
+            self.options_rects.append(
+                pygame.Rect(
+                    config.Display.width // 2 - option_size[0] // 2,
+                    option_y - option_size[1],
+                    option_size[0],
+                    option_size[1],
+                )
+            )
 
         self.bg_level = levels.InfiniteGeneratingLevel(10)
         self.bg_camera = threedee.Camera3D()
@@ -160,6 +177,18 @@ class MainMenuMode(GameMode):
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return
+            if e.type == pygame.MOUSEMOTION:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        SoundManager.play("blip")
+                        self.selected_option_idx = i
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        print("I work")
+                        self.options[i][1]()
 
         self._update_bg(dt)
 
@@ -187,7 +216,7 @@ class MainMenuMode(GameMode):
             option_size = option_surface.get_size()
             screen.blit(
                 option_surface,
-                dest=(screen_size[0] // 2 - option_size[0] // 2, option_y),
+                (screen_size[0] // 2 - option_size[0] // 2, option_y),
             )
             option_y += option_size[1]
 
@@ -201,9 +230,6 @@ class MainMenuMode(GameMode):
         )
 
     def _draw_bg(self, screen):
-        import rendering.levelbuilder3d as levelbuilder3d
-        import rendering.neon as neon
-
         cur_z = self.bg_camera.position.z
         cell_len = 20
 
