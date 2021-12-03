@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,ogg,wav,json
 source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = .github,leaderboard,screenshots
+source.exclude_dirs = .github,leaderboard,metadata
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = LICENSE

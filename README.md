@@ -8,8 +8,8 @@ Jump over the red spikes, slide to kick the green enemies, evade the purple wall
 
 ## Screenshots
 
-![gameplay.gif](screenshots/gameplay.gif?raw=true "gameplay")
-![zoom.gif](screenshots/zoom.gif?raw=true "zoom")
+![gameplay.gif](metadata/en-US/images/phoneScreenshots/gameplay.gif?raw=true "gameplay")
+![zoom.gif](metadata/en-US/images/phoneScreenshots/zoom.gif?raw=true "zoom")
 
 ## Copying
 

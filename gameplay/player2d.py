@@ -15,7 +15,7 @@ class Player:
         self.lane = 0
         self.speed = 0  # units per second, this is mainly controlled
         self.dy = 0
-        self.modes = ['run', 'jump', 'slide', 'dead']
+        self.modes = ["run", "jump", "slide", "dead"]
         self.current_mode = self.modes[0]
 
         self.last_z_pos = z  # used for collision detection
@@ -33,16 +33,16 @@ class Player:
             self.current_mode = mode
 
     def is_sliding(self):
-        return self.current_mode == 'slide'
+        return self.current_mode == "slide"
 
     def is_jumping(self):
-        return self.current_mode == 'jump'
+        return self.current_mode == "jump"
 
     def is_running(self):
-        return self.current_mode == 'run'
+        return self.current_mode == "run"
 
     def is_dead(self):
-        return self.current_mode == 'dead'
+        return self.current_mode == "dead"
 
     def get_mode(self):
         return self.current_mode
@@ -83,12 +83,12 @@ class Player:
 
     def move_left(self):
         if not self.is_dead():
-            SoundManager.play('blip')
+            SoundManager.play("blip")
             self.lane -= 1
 
     def move_right(self):
         if not self.is_dead():
-            SoundManager.play('blip')
+            SoundManager.play("blip")
             self.lane += 1
 
     def move_forward(self, dt):
@@ -99,12 +99,12 @@ class Player:
         return self.lane % total_lanes
 
     def run(self):
-        self.set_mode('run')
+        self.set_mode("run")
 
     def jump(self):
         if not self.is_jumping():
-            SoundManager.play('jump')
-            self.set_mode('jump')
+            SoundManager.play("jump")
+            self.set_mode("jump")
             self.dy = 5
 
     def max_jump_height(self):
@@ -112,7 +112,7 @@ class Player:
 
     def slide(self):
         if self.is_running():
-            self.set_mode('slide')
+            self.set_mode("slide")
 
     def set_speed(self, speed):
         self.speed = speed
@@ -161,7 +161,7 @@ class Player:
             self.y = 0
             self.dy = 0
             if not self.is_sliding():
-                self.set_mode('run')
+                self.set_mode("run")
 
         self.move_forward(dt)
 
@@ -170,18 +170,20 @@ class Player:
             return
         else:
             lane_n = self.get_lane(level.number_of_lanes())
-            obstacles = level.get_all_obstacles_between(lane_n, self.last_z_pos, self.z + self.length)
+            obstacles = level.get_all_obstacles_between(
+                lane_n, self.last_z_pos, self.z + self.length
+            )
             for obs in obstacles:
                 if obs.handle_potential_collision(self):
-                    self.set_mode('dead')
-                    SoundManager.play('death')
+                    self.set_mode("dead")
+                    SoundManager.play("death")
                     self._obstacle_that_killed_me = obs
                     return
 
     def draw(self, display):
         # draw info to display
-        fonts.Text(display, 'X : ' + str(self.x) + ' | OPTIONAL', 50, 150, 25).draw()
-        fonts.Text(display, 'Y : {:.2f}'.format(self.y), 50, 200, 25).draw()
-        fonts.Text(display, 'Z : ' + str(int(self.z)), 50, 250, 25).draw()
-        fonts.Text(display, 'LANE : ' + str(self.lane), 50, 300, 25).draw()
-        fonts.Text(display, 'MODE : ' + self.current_mode, 550, 50, 25).draw()
+        fonts.Text(display, "X : " + str(self.x) + " | OPTIONAL", 50, 150, 25).draw()
+        fonts.Text(display, "Y : {:.2f}".format(self.y), 50, 200, 25).draw()
+        fonts.Text(display, "Z : " + str(int(self.z)), 50, 250, 25).draw()
+        fonts.Text(display, "LANE : " + str(self.lane), 50, 300, 25).draw()
+        fonts.Text(display, "MODE : " + self.current_mode, 550, 50, 25).draw()

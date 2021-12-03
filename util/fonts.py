@@ -11,7 +11,7 @@ _FONT_PATHS = {
     "lame": "assets/fonts/CONSOLA.TTF",
     "lame_bold": "assets/fonts/CONSOLAB.TTF",
     "cool": "assets/fonts/VectorBattle.ttf",
-    "blocky": "assets/fonts/EightBit Atari-Ascprin.ttf"
+    "blocky": "assets/fonts/EightBit Atari-Ascprin.ttf",
 }
 
 
@@ -31,7 +31,18 @@ def get_font(size, name="lame", bold=False, normalized=True):
 
 
 class Text:
-    def __init__(self, display: pygame.Surface, msg, x=250, y=250, size=50, color=(255, 255, 255), font='courier', blink=False, centered=False):
+    def __init__(
+        self,
+        display: pygame.Surface,
+        msg,
+        x=250,
+        y=250,
+        size=50,
+        color=(255, 255, 255),
+        font="courier",
+        blink=False,
+        centered=False,
+    ):
         self.display = display
         self.msg = msg
         self.x = x
@@ -51,6 +62,10 @@ class Text:
                 self.visible = not self.visible
         if self.visible:
             if self.centered:
-                self.display.blit(self.text, self.text.get_rect(center=(self.x, self.y)))
+                self.display.blit(
+                    self.text, self.text.get_rect(center=(self.x, self.y))
+                )
             else:
-                self.display.blit(self.text, self.text.get_rect(topleft=(self.x, self.y)))
+                self.display.blit(
+                    self.text, self.text.get_rect(topleft=(self.x, self.y))
+                )

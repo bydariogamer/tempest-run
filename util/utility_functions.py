@@ -15,14 +15,14 @@ def distance(p1: Union[tuple, list], p2: Union[tuple, list]) -> float:
     return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
 
-def get_display_resolution():   # -> tuple[int, int]:
+def get_display_resolution():  # -> tuple[int, int]:
     display_width: int = pygame.display.Info().current_w
     display_height: int = pygame.display.Info().current_h
     return display_width, display_height
 
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -53,7 +53,9 @@ def abs_angle_between_angles(a1_deg, a2_deg):
     return (360 - phi, False) if phi > 180 else (phi, True)
 
 
-def map_from_interval_to_interval(val: float, interval1: List[float], interval2: List[float]):
+def map_from_interval_to_interval(
+    val: float, interval1: List[float], interval2: List[float]
+):
     """Linearly maps a value from one interval to another
 
     example: val=2, interval1=[0, 4], interval2=[0, 10] -> 5
@@ -63,10 +65,23 @@ def map_from_interval_to_interval(val: float, interval1: List[float], interval2:
 
 
 class SpriteSheet:
-    def __init__(self, img_file_name: Union[str, pygame.Surface], sprite_qty, row, col, color_key=None, flipped=False, scale_factor=1):
+    def __init__(
+        self,
+        img_file_name: Union[str, pygame.Surface],
+        sprite_qty,
+        row,
+        col,
+        color_key=None,
+        flipped=False,
+        scale_factor=1,
+    ):
         self.scale_factor = scale_factor
         self.is_flipped = flipped
-        self.sheet = pygame.image.load(img_file_name) if type(img_file_name) is str else img_file_name
+        self.sheet = (
+            pygame.image.load(img_file_name)
+            if type(img_file_name) is str
+            else img_file_name
+        )
         self.row = row
         self.col = col
         self.w = self.sheet.get_width() // self.col
@@ -78,7 +93,10 @@ class SpriteSheet:
     def get_sprite_at_pos(self, x, y):
         img = pygame.Surface((self.w, self.h), pygame.SRCALPHA)
         img.blit(self.sheet, (0, 0), pygame.Rect(x, y, self.w, self.h))
-        img = pygame.transform.scale(img, (img.get_width() * self.scale_factor, img.get_height() * self.scale_factor))
+        img = pygame.transform.scale(
+            img,
+            (img.get_width() * self.scale_factor, img.get_height() * self.scale_factor),
+        )
         if self.color_key is not None:
             img.set_colorkey(self.color_key)
         if self.is_flipped:
@@ -93,6 +111,8 @@ class SpriteSheet:
             c += 1
             if c > self.sprite_qty:
                 break
-            sprite = self.get_sprite_at_pos((i % self.col) * self.w, i % self.row * self.h)
+            sprite = self.get_sprite_at_pos(
+                (i % self.col) * self.w, i % self.row * self.h
+            )
             images.append(sprite)
         return images
