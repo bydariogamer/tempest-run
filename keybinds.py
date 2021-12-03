@@ -16,3 +16,4 @@ MENU_CANCEL = config.KeyBinds.Menu.cancel
 
 TOGGLE_NEON = config.KeyBinds.Toogle.neon
 TOGGLE_PROFILER = config.KeyBinds.Toogle.profiler
+TOGGLE_FPS = config.KeyBinds.Toogle.fps
