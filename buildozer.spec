@@ -48,7 +48,7 @@ requirements = kivy,android,pygame,opencv,numpy
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/presplash.gif
 
-android.presplash_lottie = %(source.dir)s/asset/lottie.json
+android.presplash_lottie = %(source.dir)s/lottie.json
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/icon.png
