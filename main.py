@@ -107,13 +107,11 @@ class MainMenuMode(GameMode):
         self.option_font = fonts.get_font(config.FontSize.option)
         self.options_rects = []
 
-        title_size = self.title_font.render("TEMPEST RUN", True, (0, 0, 0)).get_size()
+        title_size = self.title_font.size("TEMPEST RUN")
         title_y = config.Display.height // 3 - title_size[1] // 2
         option_y = max(config.Display.height // 2, title_y + title_size[1])
         for i in range(len(self.options)):
-            option_text = self.options[i][0]
-            option_surface = self.option_font.render(option_text.upper(), True, (0, 0, 0))
-            option_size = option_surface.get_size()
+            option_size = self.option_font.size(self.options[i][0].upper())
             option_y += option_size[1]
             self.options_rects.append(
                 pygame.Rect(
@@ -186,8 +184,7 @@ class MainMenuMode(GameMode):
             if e.type == pygame.MOUSEBUTTONDOWN:
                 coords = e.pos
                 for i, option in enumerate(self.options_rects):
-                    if option.collidepoint(coords) and i != self.selected_option_idx:
-                        print("I work")
+                    if option.collidepoint(coords):
                         self.options[i][1]()
 
         self._update_bg(dt)

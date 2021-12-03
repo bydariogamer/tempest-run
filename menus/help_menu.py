@@ -1,4 +1,3 @@
-import math
 import random
 
 import pygame
@@ -34,9 +33,21 @@ class HelpMenuMode(GameMode):
             _generate_square() for _ in range(self.n_squares)
         ]  # format -> [x, y, angle, speed]
 
-        self.title_font = fonts.get_font(config.FontSize.title)
-        self.option_font = fonts.get_font(config.FontSize.option)
-        self.info_font = fonts.get_font(config.FontSize.info)
+        self.title_font: pygame.font.Font = fonts.get_font(config.FontSize.title)
+        self.option_font: pygame.font.Font = fonts.get_font(config.FontSize.option)
+        self.info_font: pygame.font.Font = fonts.get_font(config.FontSize.info)
+
+        self.options_rects = []
+        for i in range(len(self.options)):
+            option_size = self.option_font.size(self.options[i][0].upper())
+            self.options_rects.append(
+                pygame.Rect(
+                    config.Display.width // (len(self.options) + 1) * (i + 1) - option_size[0] // 2,
+                    config.Display.height / 2,
+                    option_size[0],
+                    option_size[1],
+                )
+            )
 
     @staticmethod
     def get_square_points(x, y, angle, size=50):
@@ -91,6 +102,18 @@ class HelpMenuMode(GameMode):
                         self.exit_pressed()
                     else:
                         SoundManager.play("blip2")
+            if e.type == pygame.MOUSEMOTION:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        SoundManager.play("blip")
+                        self.selected_option_idx = i
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and self.selected_option_idx == 2:
+                        SoundManager.play("accept")
+                        self.exit_pressed()
 
     def draw_to_screen(self, screen):
         screen.fill((0, 0, 0))

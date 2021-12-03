@@ -170,6 +170,20 @@ class PauseMenu(main.GameMode):
         self.title_font = fonts.get_font(config.FontSize.title)
         self.option_font = fonts.get_font(config.FontSize.option)
 
+        self.options_rects = []
+        option_y = config.Display.height // 2
+        for i in range(len(self.options)):
+            option_size = self.option_font.size(self.options[i][0].upper())
+            self.options_rects.append(
+                pygame.Rect(
+                    config.Display.width // 2 - option_size[0] // 2,
+                    option_y,
+                    option_size[0],
+                    option_size[1],
+                )
+            )
+            option_y += option_size[1]
+
         self.pause_timer = 0  # how long we've been paused
 
     def on_mode_start(self):
@@ -201,6 +215,17 @@ class PauseMenu(main.GameMode):
                 elif e.key in keybinds.MENU_CANCEL:
                     self.continue_pressed()
                     return
+            if e.type == pygame.MOUSEMOTION:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        SoundManager.play("blip")
+                        self.selected_option_idx = i
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords):
+                        self.options[i][1]()
 
     def continue_pressed(self):
         SoundManager.play("accept")
