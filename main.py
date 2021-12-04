@@ -247,7 +247,9 @@ class MainMenuMode(GameMode):
 
 
 def create_or_recreate_window():
-    size = config.Display.width, config.Display.height
+    display_info = pygame.display.Info()
+    display_size = (display_info.current_w, display_info.current_h)
+    size = display_size if config.Platform.IS_ANDROID and -1 not in display_size else (config.Display.width, config.Display.height)
     flags = pygame.SCALED | pygame.FULLSCREEN if config.Platform.IS_ANDROID else pygame.SCALED | pygame.RESIZABLE
     pygame.display.set_mode(size, flags)
     pygame.display.set_caption(config.Display.title)
