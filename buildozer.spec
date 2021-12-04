@@ -7,7 +7,7 @@ title = Tempest Run
 package.name = tempestrun
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = dev.bydariogamer
+package.domain = org.bydariogamer
 
 # (str) Source code where the main.py live
 source.dir = .
