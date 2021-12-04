@@ -262,7 +262,6 @@ def get_player_shape_at_origin(player) -> List[threedee.Line3D]:
         else player.get_last_mode_before_death()
     )
 
-    art_to_use = None
     if player_mode == "jump":
         art_to_use = "jump"
     elif player_mode == "slide":
@@ -336,6 +335,7 @@ def align_shape_to_level_surface(
     :param lane_n: lane the object is in
     :param squeeze: whether the object should be "squeezed" inward as it approaches the center of the level
                     (this is needed for things like walls that should meet each other cleanly at their boundaries).
+    :param level: the currently playing level
     :return: a new set of Line3Ds, aligned to the level
     """
     if z_start == z_end:

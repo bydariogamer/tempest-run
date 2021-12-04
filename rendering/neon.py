@@ -50,8 +50,8 @@ class NeonLine:
         # why are there two nearly identical line classes, you ask? i f-d up
         # anyways this method converts a list of Line2Ds into NeonLines~
         return [
-            NeonLine([l.p1, l.p2], l.width, l.color, inner_color=l.inner_color)
-            for l in line2ds
+            NeonLine([line.p1, line.p2], line.width, line.color, inner_color=line.inner_color)
+            for line in line2ds
         ]
 
 
@@ -139,20 +139,23 @@ class NeonRenderer:
 
         pygame.surfarray.blit_array(surface, self._buf)
 
-    def polylines(self, array, pts, connected, color, width, lineType=cv2.LINE_4):
+    @staticmethod
+    def polylines(array, pts, connected, color, width, lineType=cv2.LINE_4):
         """calls cv2.polylines with the given params.
         The only reason this method is split off like this is to make things easier to profile.
         """
         cv2.polylines(array, pts, connected, color, width, lineType=lineType)
 
-    def _blur(self, array, kernel):
+    @staticmethod
+    def _blur(array, kernel):
         """blurs the image using cv2.blur
         The only reason this method is split off like this is to make things easier to profile.
         """
         if kernel is not None:
             cv2.blur(array, kernel, dst=array)
 
-    def _darken(self, array, darkness_factor):
+    @staticmethod
+    def _darken(array, darkness_factor):
         """darkens the image
         :param darkness_factor: a value from 0 to 1 that determines how dark it will be
         """

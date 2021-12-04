@@ -7,7 +7,6 @@ import gameplay.levels as levels
 import rendering.neon as neon
 import rendering.threedee as threedee
 import rendering.levelbuilder3d as levelbuilder3d
-import keybinds
 import util.utility_functions as utility_functions
 import util.fonts as fonts
 import gameplay.highscores as highscores
@@ -61,9 +60,9 @@ class GameplayMode(main.GameMode):
     def handle_events(self, events):
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_CANCEL:
+                if e.key in config.KeyBinds.Menu.cancel:
                     self.loop.set_mode(PauseMenu(self.loop, self))
-                if e.key in keybinds.RESET:
+                if e.key in config.KeyBinds.Game.reset:
                     self.loop.set_mode(GameplayMode(self.loop))
 
     def update_camera_position(self, dt):
@@ -197,22 +196,22 @@ class PauseMenu(main.GameMode):
         self.pause_timer += dt
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_UP:
+                if e.key in config.KeyBinds.Menu.up:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_DOWN:
+                elif e.key in config.KeyBinds.Menu.down:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_ACCEPT:
+                elif e.key in config.KeyBinds.Menu.accept:
                     self.options[self.selected_option_idx][
                         1
                     ]()  # activate the option's lambda
                     return
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     self.continue_pressed()
                     return
             if e.type == pygame.MOUSEMOTION:
@@ -302,23 +301,23 @@ class RetryMenu(main.GameMode):
         self.pause_timer += dt
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_UP and self.pause_timer > 0.5:
+                if e.key in config.KeyBinds.Menu.up and self.pause_timer > 0.5:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_DOWN and self.pause_timer > 0.5:
+                elif e.key in config.KeyBinds.Menu.down and self.pause_timer > 0.5:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_ACCEPT:
+                elif e.key in config.KeyBinds.Menu.accept:
                     SoundManager.play("accept")
                     self.options[self.selected_option_idx][
                         1
                     ]()  # activate the option's lambda
                     return
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return

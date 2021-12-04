@@ -107,7 +107,8 @@ class Player:
             self.set_mode("jump")
             self.dy = 5
 
-    def max_jump_height(self):
+    @staticmethod
+    def max_jump_height():
         return 0.85  # this only matters for rendering. an approximate value is ok.
 
     def slide(self):

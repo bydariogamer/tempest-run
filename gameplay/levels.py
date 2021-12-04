@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pygame import Vector3, Color
 from rendering.threedee import Line3D
 import rendering.neon as neon
@@ -353,11 +353,11 @@ class InfiniteGeneratingLevel(Level):
                 if obs is not None:
                     self._obstacle_grid[(n, i)] = obs
 
-    def generate_obstacle_at_cell(self, n, i) -> Obstacle:
+    def generate_obstacle_at_cell(self, n, i) -> Optional[Obstacle]:
         """Subclasses can override this to implement custom generation logic."""
         if n == 0 and i < 5:
             # don't let obstacles spawn right in your face at the start of a run
-            return None
+            return
 
         if random.random() < 0.333 * min(1, i / 20):
             r = random.randint(0, 3)
@@ -370,13 +370,13 @@ class InfiniteGeneratingLevel(Level):
             else:
                 return Enemy(n, (i + 0.5) * cs - length / 2, length)
         else:
-            return None
+            return
 
     def get_obstacle_at_cell_if_loaded(self, n, i):
         if (n, i) in self._obstacle_grid:
             return self._obstacle_grid[(n, i)]
         else:
-            return None
+            return
 
     def unload_obstacles(self, z_end):
         cell_end = int(z_end / self.get_cell_length())

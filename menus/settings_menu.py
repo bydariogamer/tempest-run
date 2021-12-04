@@ -65,21 +65,21 @@ class SettingsMenuMode(main.GameMode):
     def update(self, dt, events):
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_UP:
+                if e.key in config.KeyBinds.Menu.up:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_DOWN:
+                elif e.key in config.KeyBinds.Menu.down:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_ACCEPT:
+                elif e.key in config.KeyBinds.Menu.accept:
                     # so sound bc there's nothing to accept
                     if self.selected_option_idx == len(self.options) - 1:
                         self.options[self.selected_option_idx][1]()
-                elif e.key in keybinds.MENU_RIGHT:
+                elif e.key in config.KeyBinds.Menu.right:
                     SoundManager.play("blip")
                     if (
                         self.options[self.selected_option_idx][1]
@@ -102,7 +102,7 @@ class SettingsMenuMode(main.GameMode):
                             + 1
                         ]
                         self._update_volumes()
-                elif e.key in keybinds.MENU_LEFT:
+                elif e.key in config.KeyBinds.Menu.left:
                     SoundManager.play("blip")
                     if (
                         self.options[self.selected_option_idx][1]
@@ -125,7 +125,7 @@ class SettingsMenuMode(main.GameMode):
                             - 1
                         ]
                         self._update_volumes()
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     self.exit_pressed()
                     return
 

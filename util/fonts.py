@@ -39,7 +39,6 @@ class Text:
         y=250,
         size=50,
         color=(255, 255, 255),
-        font="courier",
         blink=False,
         centered=False,
     ):
