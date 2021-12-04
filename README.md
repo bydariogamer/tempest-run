@@ -15,6 +15,6 @@ Jump over the red spikes, slide to kick the green enemies, evade the purple wall
 
 The game is licensed under GNU General Public License (see [LICENSE](LICENSE)).
 
-We have permission to use all the assets that are in the game, but they are not under tha game license necesarily.
+We have permission to use all the assets that are in the game, but they are not under tha game license necessarily.
 
 Check the license of any file you find in [assets](assets) before using it in any situation but this game.
