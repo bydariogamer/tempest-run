@@ -1,7 +1,10 @@
+import os
+
 import pygame
 import json
 import pathlib
 import traceback
+import platform
 
 
 class Display:
@@ -57,6 +60,14 @@ class KeyBinds:
     class Toogle:
         neon = [pygame.K_n]
         profiler = [pygame.K_F1]
+        fps = [pygame.K_F2]
+
+
+class Platform:
+    IS_ANDROID = "ANDROID_ARGUMENT" in os.environ
+    IS_WINDOWS = platform.system() == "Windows"
+    IS_LINUX = platform.system() == "Linux"
+    IS_MAC = platform.system() == "Darwin"
 
 
 _default_configs = {
@@ -89,8 +100,19 @@ _default_configs = {
             "accept": [pygame.K_RETURN, pygame.K_SPACE],
             "cancel": [pygame.K_ESCAPE, pygame.K_AC_BACK],
         },
-        "Toogle": {"neon": [pygame.K_n], "profiler": []},
+        "Toogle": {
+            "neon": [pygame.K_n],
+            "profiler": [pygame.K_F1],
+            "fps": [pygame.K_F2],
+        },
     },
+    # No need to configure the OS, it should be detected by default
+    # "Platform": {
+    #     "IS_ANDROID": Platform.IS_ANDROID,
+    #     "IS_WINDOWS": platform.system() == "Windows",
+    #     "IS_LINUX": platform.system() == "Linux",
+    #     "IS_MAC": platform.system() == "Darwin",
+    # }
 }
 
 
@@ -127,6 +149,7 @@ def _apply_configs_from_json(configuration):
     KeyBinds.Menu.cancel = configuration["KeyBinds"]["Menu"]["cancel"]
     KeyBinds.Toogle.neon = configuration["KeyBinds"]["Toogle"]["neon"]
     KeyBinds.Toogle.profiler = configuration["KeyBinds"]["Toogle"]["profiler"]
+    KeyBinds.Toogle.fps = configuration["KeyBinds"]["Toogle"]["fps"]
 
 
 _apply_configs_from_json(_default_configs)  # initialize configs to defaults
