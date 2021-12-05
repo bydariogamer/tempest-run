@@ -132,7 +132,6 @@ class NeonRenderer:
                 line.inner_width,
                 lineType=cv2.LINE_AA,
             )
-        self._blur(self._buf, self.highlight_bloom_kernel)
 
         # post processing effects
         self._darken(self._buf, self.darkness_factor * extra_darkness_factor)
