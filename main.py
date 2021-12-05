@@ -59,7 +59,7 @@ class GameLoop:
                     if e.key in config.KeyBinds.Toogle.flag:
                         config.Debug.flag = not config.Debug.flag
                         pygame.display.set_caption(
-                            config.Display.title + " DEBUG FLAG ON" if config.Debug.flag else ""
+                            config.Display.title + (" DEBUG FLAG ON" if config.Debug.flag else "")
                         )
 
             cur_mode = self.current_mode
