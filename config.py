@@ -39,6 +39,7 @@ class Debug:
     use_neon = True
     fps_test = False
     jumping_enemies = False
+    flag = False
 
 
 class KeyBinds:
@@ -61,6 +62,7 @@ class KeyBinds:
         neon = [pygame.K_n]
         profiler = [pygame.K_F1]
         fps = [pygame.K_F2]
+        flag = [pygame.K_F3]
 
 
 class Platform:
