@@ -99,11 +99,10 @@ class NeonRenderer:
         ):
             self._buf = pygame.surfarray.array3d(surface)
 
-        # # fill screen with black
+        # fill screen with black
         self._buf[...] = 0
 
-        # Ghast's Neon Line Drawing AlgorithmTM
-
+        # Ghast's Neon Line Drawing Algorithm (modified by bydariogamer)
         # 1st pass, draw large, dark, faint glow around line
         for line in lines:
             self.polylines(

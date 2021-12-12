@@ -113,6 +113,7 @@ class MainMenuMode(GameMode):
         self.option_font = fonts.get_font(config.FontSize.option)
         self.options_rects = []
 
+        # get options' text positions
         title_size = self.title_font.size("TEMPEST RUN")
         title_y = config.Display.height // 3 - title_size[1] // 2
         option_y = max(config.Display.height // 2, title_y + title_size[1])

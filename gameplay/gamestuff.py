@@ -282,12 +282,37 @@ class RetryMenu(main.GameMode):
             ("retry", lambda: self.retry_pressed()),
             ("exit", lambda: self.exit_pressed()),
         ]
+        self.options_rects = []
 
-        self.title_font = fonts.get_font(config.FontSize.title)
-        self.option_font = fonts.get_font(config.FontSize.option)
-        self.info_font = fonts.get_font(config.FontSize.info)
+        self.title_font: pygame.font.Font = fonts.get_font(config.FontSize.title)
+        self.option_font: pygame.font.Font = fonts.get_font(config.FontSize.option)
+        self.info_font: pygame.font.Font = fonts.get_font(config.FontSize.info)
 
         self.death_message = death_message
+
+        # get options' text positions
+        screen_size = (config.Display.width, config.Display.height)
+        title_size = self.title_font.size("GAME OVER")
+        title_y = screen_size[1] // 3 - title_size[1] // 2
+        cur_y = title_y + int(title_size[1] * 0.9)
+        death_msg_size = self.info_font.size(self.death_message.upper())
+        cur_y += int(death_msg_size[1] * 2)
+        subtitle_surface1_size = self.info_font.size("SCORE: {}".format(self.score))
+        cur_y += subtitle_surface1_size[1]
+        subtitle_surface2_size = self.info_font.size("BEST: {}".format(self.best_score))
+        cur_y += int(subtitle_surface2_size[1] * 2)
+        option_y = max(screen_size[1] // 2, cur_y)
+        for i in range(len(self.options)):
+            option_size = self.option_font.size(self.options[i][0].upper())
+            self.options_rects.append(
+                pygame.Rect(
+                    screen_size[0] // 2 - option_size[0] // 2,
+                    option_y,
+                    option_size[0],
+                    option_size[1],
+                )
+            )
+            option_y += option_size[1]
 
         self.pause_timer = 0  # how long we've been paused
 
@@ -321,6 +346,19 @@ class RetryMenu(main.GameMode):
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return
+            if e.type == pygame.MOUSEMOTION:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        SoundManager.play("blip")
+                        self.selected_option_idx = i
+
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords):
+                        SoundManager.play("accept")
+                        self.options[i][1]()
 
     def retry_pressed(self):
         self.loop.set_mode(GameplayMode(self.loop))
