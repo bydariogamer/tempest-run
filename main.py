@@ -14,10 +14,10 @@ import util.utility_functions as utils
 
 __version__ = "1.0.0"
 
-TARGET_FPS = config.Display.fps if not config.Debug.fps_test else -1
-
 
 class GameLoop:
+    TARGET_FPS = -1 if config.Debug.fps_test else config.Display.fps
+
     def __init__(self):
         self.running = True
         self.clock = pygame.time.Clock()
@@ -55,6 +55,7 @@ class GameLoop:
                         profiling.get_instance().toggle()
                     if e.key in keybinds.TOGGLE_FPS:
                         config.Debug.fps_test = not config.Debug.fps_test
+                        self.TARGET_FPS = -1 if config.Debug.fps_test else config.Display.fps
 
                     if e.key in config.KeyBinds.Toogle.flag:
                         config.Debug.flag = not config.Debug.flag
@@ -72,7 +73,7 @@ class GameLoop:
             if config.Debug.fps_test:
                 print(int(self.clock.get_fps()))
 
-            dt = self.clock.tick(TARGET_FPS) / 1000.0
+            dt = self.clock.tick(self.TARGET_FPS) / 1000.0
 
 
 class GameMode:

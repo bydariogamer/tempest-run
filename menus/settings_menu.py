@@ -1,7 +1,6 @@
 import pygame
 
 import config
-import keybinds
 import rendering.neon as neon
 import util.fonts as fonts
 import main
@@ -34,9 +33,37 @@ class SettingsMenuMode(main.GameMode):
             ],
             ["save & exit", lambda: self.exit_pressed()],
         ]
+        self.options_rects = []
 
         self.title_font = fonts.get_font(config.FontSize.title)
         self.option_font = fonts.get_font(config.FontSize.option)
+
+        self._update_options_rect()
+
+    def _update_options_rect(self):
+        self.options_rects = []
+        screen_size = config.Display.width, config.Display.height
+        option_y = screen_size[1] // 2
+        for i in range(len(self.options)):
+            option_text = self.options[i][0]
+            if i != len(self.options) - 1:
+                text = f"{option_text.upper()}: {self.options[i][1]}"
+                if self.options[i][1] != self.options[i][2][0]:
+                    text = "<  " + text
+                if self.options[i][1] != self.options[i][2][-1]:
+                    text = text + "  >"
+            else:
+                text = option_text.upper()
+            option_size = self.option_font.size(text)
+            self.options_rects.append(
+                pygame.Rect(
+                    screen_size[0] // 2 - option_size[0] // 2,
+                    option_y,
+                    option_size[0],
+                    option_size[1],
+                )
+            )
+            option_y += option_size[1]
 
     def on_mode_start(self):
         SoundManager.play_song("menu_theme", fadein_ms=3000)
@@ -76,58 +103,83 @@ class SettingsMenuMode(main.GameMode):
                         self.options
                     )
                 elif e.key in config.KeyBinds.Menu.accept:
-                    # so sound bc there's nothing to accept
+                    # no sound because there's nothing to accept
                     if self.selected_option_idx == len(self.options) - 1:
                         self.options[self.selected_option_idx][1]()
                 elif e.key in config.KeyBinds.Menu.right:
                     SoundManager.play("blip")
-                    if (
-                        self.options[self.selected_option_idx][1]
-                        not in self.options[self.selected_option_idx][2]
-                    ):
-                        self.options[self.selected_option_idx][1] = self.options[
-                            self.selected_option_idx
-                        ][2][self.options[self.selected_option_idx][3]]
-                        self._update_volumes()
-                    elif (
-                        self.options[self.selected_option_idx][1]
-                        != self.options[self.selected_option_idx][2][-1]
-                    ):
-                        self.options[self.selected_option_idx][1] = self.options[
-                            self.selected_option_idx
-                        ][2][
-                            self.options[self.selected_option_idx][2].index(
-                                self.options[self.selected_option_idx][1]
-                            )
-                            + 1
-                        ]
-                        self._update_volumes()
+                    self._option_right()
                 elif e.key in config.KeyBinds.Menu.left:
                     SoundManager.play("blip")
-                    if (
-                        self.options[self.selected_option_idx][1]
-                        not in self.options[self.selected_option_idx][2]
-                    ):
-                        self.options[self.selected_option_idx][1] = self.options[
-                            self.selected_option_idx
-                        ][2][self.options[self.selected_option_idx][3]]
-                        self._update_volumes()
-                    elif (
-                        self.options[self.selected_option_idx][1]
-                        != self.options[self.selected_option_idx][2][0]
-                    ):
-                        self.options[self.selected_option_idx][1] = self.options[
-                            self.selected_option_idx
-                        ][2][
-                            self.options[self.selected_option_idx][2].index(
-                                self.options[self.selected_option_idx][1]
-                            )
-                            - 1
-                        ]
-                        self._update_volumes()
+                    self._option_left()
                 elif e.key in config.KeyBinds.Menu.cancel:
                     self.exit_pressed()
                     return
+            if e.type == pygame.MOUSEMOTION:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords) and i != self.selected_option_idx:
+                        SoundManager.play("blip")
+                        self.selected_option_idx = i
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                coords = e.pos
+                for i, option in enumerate(self.options_rects):
+                    if option.collidepoint(coords):
+                        if i == len(self.options_rects) - 1:
+                            self.exit_pressed()
+                        else:
+                            if coords[0] < config.Display.width / 2:
+                                self._option_left()
+                            else:
+                                self._option_right()
+
+    def _option_right(self):
+        if (
+                self.options[self.selected_option_idx][1]
+                not in self.options[self.selected_option_idx][2]
+        ):
+            self.options[self.selected_option_idx][1] = self.options[
+                self.selected_option_idx
+            ][2][self.options[self.selected_option_idx][3]]
+            self._update_volumes()
+        elif (
+                self.options[self.selected_option_idx][1]
+                != self.options[self.selected_option_idx][2][-1]
+        ):
+            self.options[self.selected_option_idx][1] = self.options[
+                self.selected_option_idx
+            ][2][
+                self.options[self.selected_option_idx][2].index(
+                    self.options[self.selected_option_idx][1]
+                )
+                + 1
+                ]
+            self._update_volumes()
+        self._update_options_rect()
+
+    def _option_left(self):
+        if (
+                self.options[self.selected_option_idx][1]
+                not in self.options[self.selected_option_idx][2]
+        ):
+            self.options[self.selected_option_idx][1] = self.options[
+                self.selected_option_idx
+            ][2][self.options[self.selected_option_idx][3]]
+            self._update_volumes()
+        elif (
+                self.options[self.selected_option_idx][1]
+                != self.options[self.selected_option_idx][2][0]
+        ):
+            self.options[self.selected_option_idx][1] = self.options[
+                self.selected_option_idx
+            ][2][
+                self.options[self.selected_option_idx][2].index(
+                    self.options[self.selected_option_idx][1]
+                )
+                - 1
+                ]
+            self._update_volumes()
+        self._update_options_rect()
 
     def draw_to_screen(self, screen: pygame.Surface):
         screen.fill((0, 0, 0))
