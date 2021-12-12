@@ -50,7 +50,9 @@ class NeonLine:
         # why are there two nearly identical line classes, you ask? i f-d up
         # anyways this method converts a list of Line2Ds into NeonLines~
         return [
-            NeonLine([line.p1, line.p2], line.width, line.color, inner_color=line.inner_color)
+            NeonLine(
+                [line.p1, line.p2], line.width, line.color, inner_color=line.inner_color
+            )
             for line in line2ds
         ]
 

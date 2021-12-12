@@ -42,7 +42,8 @@ class HelpMenuMode(GameMode):
             option_size = self.option_font.size(self.options[i][0].upper())
             self.options_rects.append(
                 pygame.Rect(
-                    config.Display.width // (len(self.options) + 1) * (i + 1) - option_size[0] // 2,
+                    config.Display.width // (len(self.options) + 1) * (i + 1)
+                    - option_size[0] // 2,
                     config.Display.height / 2,
                     option_size[0],
                     option_size[1],

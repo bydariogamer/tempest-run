@@ -135,16 +135,16 @@ class SettingsMenuMode(main.GameMode):
 
     def _option_right(self):
         if (
-                self.options[self.selected_option_idx][1]
-                not in self.options[self.selected_option_idx][2]
+            self.options[self.selected_option_idx][1]
+            not in self.options[self.selected_option_idx][2]
         ):
             self.options[self.selected_option_idx][1] = self.options[
                 self.selected_option_idx
             ][2][self.options[self.selected_option_idx][3]]
             self._update_volumes()
         elif (
-                self.options[self.selected_option_idx][1]
-                != self.options[self.selected_option_idx][2][-1]
+            self.options[self.selected_option_idx][1]
+            != self.options[self.selected_option_idx][2][-1]
         ):
             self.options[self.selected_option_idx][1] = self.options[
                 self.selected_option_idx
@@ -153,22 +153,22 @@ class SettingsMenuMode(main.GameMode):
                     self.options[self.selected_option_idx][1]
                 )
                 + 1
-                ]
+            ]
             self._update_volumes()
         self._update_options_rect()
 
     def _option_left(self):
         if (
-                self.options[self.selected_option_idx][1]
-                not in self.options[self.selected_option_idx][2]
+            self.options[self.selected_option_idx][1]
+            not in self.options[self.selected_option_idx][2]
         ):
             self.options[self.selected_option_idx][1] = self.options[
                 self.selected_option_idx
             ][2][self.options[self.selected_option_idx][3]]
             self._update_volumes()
         elif (
-                self.options[self.selected_option_idx][1]
-                != self.options[self.selected_option_idx][2][0]
+            self.options[self.selected_option_idx][1]
+            != self.options[self.selected_option_idx][2][0]
         ):
             self.options[self.selected_option_idx][1] = self.options[
                 self.selected_option_idx
@@ -177,7 +177,7 @@ class SettingsMenuMode(main.GameMode):
                     self.options[self.selected_option_idx][1]
                 )
                 - 1
-                ]
+            ]
             self._update_volumes()
         self._update_options_rect()
 

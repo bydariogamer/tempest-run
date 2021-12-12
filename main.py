@@ -55,12 +55,15 @@ class GameLoop:
                         profiling.get_instance().toggle()
                     if e.key in keybinds.TOGGLE_FPS:
                         config.Debug.fps_test = not config.Debug.fps_test
-                        self.TARGET_FPS = -1 if config.Debug.fps_test else config.Display.fps
+                        self.TARGET_FPS = (
+                            -1 if config.Debug.fps_test else config.Display.fps
+                        )
 
                     if e.key in config.KeyBinds.Toogle.flag:
                         config.Debug.flag = not config.Debug.flag
                         pygame.display.set_caption(
-                            config.Display.title + (" DEBUG FLAG ON" if config.Debug.flag else "")
+                            config.Display.title
+                            + (" DEBUG FLAG ON" if config.Debug.flag else "")
                         )
 
             cur_mode = self.current_mode
@@ -257,8 +260,16 @@ class MainMenuMode(GameMode):
 def create_or_recreate_window():
     display_info = pygame.display.Info()
     display_size = (display_info.current_w, display_info.current_h)
-    size = display_size if config.Platform.IS_ANDROID and -1 not in display_size else (config.Display.width, config.Display.height)
-    flags = pygame.SCALED | pygame.FULLSCREEN if config.Platform.IS_ANDROID else pygame.SCALED | pygame.RESIZABLE
+    size = (
+        display_size
+        if config.Platform.IS_ANDROID and -1 not in display_size
+        else (config.Display.width, config.Display.height)
+    )
+    flags = (
+        pygame.SCALED | pygame.FULLSCREEN
+        if config.Platform.IS_ANDROID
+        else pygame.SCALED | pygame.RESIZABLE
+    )
     pygame.display.set_mode(size, flags)
     pygame.display.set_caption(config.Display.title)
     pygame.display.set_icon(
