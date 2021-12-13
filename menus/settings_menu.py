@@ -41,7 +41,12 @@ class SettingsMenuMode(main.GameMode):
                     [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
                     5,
                 ],
-                ["fps", config.Display.fps, [30, 40, 50, 60, 70, 80, 90, 100, 110, 120], 3],
+                [
+                    "fps",
+                    config.Display.fps,
+                    [30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
+                    3,
+                ],
                 [
                     "display",
                     (config.Display.width, config.Display.height),
