@@ -72,6 +72,11 @@ class Platform:
     IS_MAC = platform.system() == "Darwin"
 
 
+if Platform.IS_ANDROID:
+    info = pygame.display.Info()
+    Display.width, Display.height = info.current_w, info.current_h
+
+
 _default_configs = {
     "Display": {
         "fps": 60,
