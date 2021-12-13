@@ -11,28 +11,45 @@ class SettingsMenuMode(main.GameMode):
     def __init__(self, loop: main.GameLoop):
         super().__init__(loop)
         self.selected_option_idx = 0
-        self.options = [
-            [
-                "music",
-                config.Music.volume,
-                [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-                5,
-            ],
-            [
-                "sound",
-                config.Sound.volume,
-                [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-                5,
-            ],
-            ["fps", config.Display.fps, [30, 40, 50, 60, 70, 80, 90, 100, 110, 120], 3],
-            [
-                "display",
-                (config.Display.width, config.Display.height),
-                [(600, 300), (960, 540), (1390, 810), (1820, 1080)],
-                0,
-            ],
-            ["save & exit", lambda: self.exit_pressed()],
-        ]
+        if config.Platform.IS_ANDROID:
+            self.options = [
+                [
+                    "music",
+                    config.Music.volume,
+                    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                    5,
+                ],
+                [
+                    "sound",
+                    config.Sound.volume,
+                    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                    5,
+                ],
+                ["save & exit", lambda: self.exit_pressed()],
+            ]
+        else:
+            self.options = [
+                [
+                    "music",
+                    config.Music.volume,
+                    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                    5,
+                ],
+                [
+                    "sound",
+                    config.Sound.volume,
+                    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                    5,
+                ],
+                ["fps", config.Display.fps, [30, 40, 50, 60, 70, 80, 90, 100, 110, 120], 3],
+                [
+                    "display",
+                    (config.Display.width, config.Display.height),
+                    [(600, 300), (960, 540), (1390, 810), (1820, 1080)],
+                    0,
+                ],
+                ["save & exit", lambda: self.exit_pressed()],
+            ]
         self.options_rects = []
 
         self.title_font = fonts.get_font(config.FontSize.title)

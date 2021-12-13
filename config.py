@@ -108,7 +108,7 @@ _default_configs = {
             "fps": [pygame.K_F2],
         },
     },
-    # No need to configure the OS, it should be detected by default
+    # No need to "configure" the OS, it should be detected by default
     # "Platform": {
     #     "IS_ANDROID": Platform.IS_ANDROID,
     #     "IS_WINDOWS": platform.system() == "Windows",
