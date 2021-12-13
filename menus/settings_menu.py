@@ -11,7 +11,7 @@ class SettingsMenuMode(main.GameMode):
     def __init__(self, loop: main.GameLoop):
         super().__init__(loop)
         self.selected_option_idx = 0
-        if config.Platform.IS_LINUX:
+        if config.Platform.IS_ANDROID:
             self.options = [
                 [
                     "music",
@@ -94,7 +94,7 @@ class SettingsMenuMode(main.GameMode):
         SoundManager.play("accept")
         self._update_volumes()
 
-        if not config.Platform.IS_LINUX:
+        if not config.Platform.IS_ANDROID:
             config.Display.fps = self.options[2][1]
             old_resolution = config.Display.width, config.Display.height
             new_resolution = self.options[3][1][0], self.options[3][1][1]
