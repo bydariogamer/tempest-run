@@ -134,6 +134,9 @@ class NeonRenderer:
                 lineType=cv2.LINE_AA,
             )
 
+        # bydariogamer's idea
+        # self._buf = cv2.GaussianBlur(self._buf, (9, 9), 0.0005)
+
         # post processing effects
         self._darken(self._buf, self.darkness_factor * extra_darkness_factor)
 

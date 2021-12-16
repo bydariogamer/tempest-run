@@ -278,13 +278,15 @@ def create_or_recreate_window():
 
 
 def _main():
+    pygame.init()
+
     config.load_configs_from_disk()
+    # config.Platform.IS_ANDROID = True
 
     # create config.json on game start if it's been deleted
     if not config.get_config_path().exists():
         config.save_configs_to_disk()
 
-    pygame.init()
     SoundManager.init()
     levelbuilder3d.load_player_art()
     create_or_recreate_window()

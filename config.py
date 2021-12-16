@@ -80,8 +80,8 @@ if Platform.IS_ANDROID:
 _default_configs = {
     "Display": {
         "fps": 60,
-        "width": 960,
-        "height": 540,
+        "width": Display.width,
+        "height": Display.height,
         "title": "TEMPEST RUN",
         "camera_bob": True,
         "use_player_art": True,
