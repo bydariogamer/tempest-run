@@ -265,7 +265,7 @@ def create_or_recreate_window():
         else (config.Display.width, config.Display.height)
     )
     flags = (
-        pygame.SCALED | pygame.FULLSCREEN
+        pygame.SCALED | pygame.FULLSCREEN | pygame.RESIZABLE
         if config.Platform.IS_ANDROID
         else pygame.SCALED | pygame.RESIZABLE
     )
