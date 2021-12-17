@@ -1,7 +1,6 @@
 #!/bin/python3
 import pygame
 
-import keybinds
 import rendering.neon as neon
 import config
 import util.profiling as profiling
@@ -46,14 +45,14 @@ class GameLoop:
 
                 # global keybinds
                 if e.type == pygame.KEYDOWN:
-                    if e.key in keybinds.TOGGLE_NEON:
+                    if e.key in config.KeyBinds.Toogle.neon:
                         config.Debug.use_neon = not config.Debug.use_neon
                         print(
                             "INFO: toggling neon to: {}".format(config.Debug.use_neon)
                         )
-                    if e.key in keybinds.TOGGLE_PROFILER:
+                    if e.key in config.KeyBinds.Toogle.profiler:
                         profiling.get_instance().toggle()
-                    if e.key in keybinds.TOGGLE_FPS:
+                    if e.key in config.KeyBinds.Toogle.fps:
                         config.Debug.fps_test = not config.Debug.fps_test
                         self.TARGET_FPS = (
                             -1 if config.Debug.fps_test else config.Display.fps
@@ -166,23 +165,23 @@ class MainMenuMode(GameMode):
     def update(self, dt, events):
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_UP:
+                if e.key in config.KeyBinds.Menu.up:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_DOWN:
+                elif e.key in config.KeyBinds.Menu.down:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_ACCEPT:
+                elif e.key in config.KeyBinds.Menu.accept:
                     SoundManager.play("accept")
                     self.options[self.selected_option_idx][
                         1
                     ]()  # activate the option's lambda
                     return
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return

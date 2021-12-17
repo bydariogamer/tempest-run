@@ -3,7 +3,6 @@ import random
 import pygame
 
 import rendering.neon as neon
-import keybinds
 from main import GameMode, GameLoop
 import util.fonts as fonts
 import config
@@ -83,21 +82,21 @@ class HelpMenuMode(GameMode):
 
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.LEFT:
+                if e.key in config.KeyBinds.Menu.left:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.RIGHT:
+                elif e.key in config.KeyBinds.Menu.right:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return
-                elif e.key in keybinds.MENU_ACCEPT:
+                elif e.key in config.KeyBinds.Menu.accept:
                     if self.selected_option_idx == 2:
                         SoundManager.play("accept")
                         self.exit_pressed()

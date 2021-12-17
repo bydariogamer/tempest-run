@@ -1,5 +1,6 @@
 import pygame
-import keybinds
+
+import config
 from sound_manager.SoundManager import SoundManager
 import time
 
@@ -132,27 +133,27 @@ class Player:
     def _handle_inputs(self, events, pressed):
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.JUMP:
+                if e.key in config.KeyBinds.Game.jump:
                     self.jump()
-                if e.key in keybinds.LEFT:
+                if e.key in config.KeyBinds.Game.left:
                     self.move_left()
-                if e.key in keybinds.RIGHT:
+                if e.key in config.KeyBinds.Game.right:
                     self.move_right()
-                if e.key in keybinds.SLIDE:
+                if e.key in config.KeyBinds.Game.slide:
                     self.slide()
             elif e.type == pygame.KEYUP:
-                if e.key in keybinds.SLIDE and self.is_sliding():
+                if e.key in config.KeyBinds.Game.slide and self.is_sliding():
                     self.run()
 
-        if any(pressed[k] for k in keybinds.SLIDE):
+        if any(pressed[k] for k in config.KeyBinds.Game.slide):
             self.slide()
 
     def _handle_movement(self, dt, pressed):
         if self.y > 0 or self.dy != 0:
             fall_speed = 25
-            if any(pressed[key] for key in keybinds.JUMP):
+            if any(pressed[key] for key in config.KeyBinds.Game.jump):
                 fall_speed -= 10  # slight jump boost if you hold the jump key down
-            if any(pressed[key] for key in keybinds.SLIDE):
+            if any(pressed[key] for key in config.KeyBinds.Game.slide):
                 fall_speed += 30
             self.dy -= fall_speed * dt
 

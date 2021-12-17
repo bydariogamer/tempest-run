@@ -3,7 +3,6 @@ import random
 import pygame
 
 import rendering.neon as neon
-import keybinds
 from main import GameMode, GameLoop
 import util.fonts as fonts
 import config
@@ -16,8 +15,8 @@ def _generate_square():
         random.randint(0, screen_w),  # x position
         screen_h + 25,  # y position
         random.randint(0, 360),  # angle
-        random.randint(2, 10) / 2 * random.choice([-1, 1]),
-    ]  # speed
+        random.randint(2, 10) / 2 * random.choice([-1, 1]),  # speed
+    ]
 
 
 class CreditsMenuMode(GameMode):
@@ -75,27 +74,27 @@ class CreditsMenuMode(GameMode):
 
         for e in events:
             if e.type == pygame.KEYDOWN:
-                if e.key in keybinds.MENU_LEFT:
+                if e.key in config.KeyBinds.Menu.left:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 1) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_RIGHT:
+                elif e.key in config.KeyBinds.Menu.right:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 1) % len(
                         self.options
                     )
-                if e.key in keybinds.MENU_UP:
+                if e.key in config.KeyBinds.Menu.up:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx - 2) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_DOWN:
+                elif e.key in config.KeyBinds.Menu.down:
                     SoundManager.play("blip")
                     self.selected_option_idx = (self.selected_option_idx + 2) % len(
                         self.options
                     )
-                elif e.key in keybinds.MENU_CANCEL:
+                elif e.key in config.KeyBinds.Menu.cancel:
                     SoundManager.play("blip2")
                     self.exit_pressed()
                     return
